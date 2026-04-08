@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-index">
+  <div class="shell">
+    <div class="app">
+      <main class="app__main">
+        <section class="s1-top-card" aria-label="Calendar">
+          <div class="s1-top-card__header" role="presentation"></div>
+          <div class="s1-top-card__sub" role="presentation"></div>
+          <div class="calendar-grid">
+            <div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+            <div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+            <div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+            <div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+            <div class="calendar-grid__cell calendar-grid__cell--mark" aria-label="Highlighted"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+          </div>
+        </section>
+
+        <section class="stack-cards" aria-label="Stacked cards">
+          <div class="stack-cards__item"><div class="stack-cards__bar"></div></div>
+          <div class="stack-cards__item"><div class="stack-cards__bar"></div></div>
+          <div class="stack-cards__item"><div class="stack-cards__bar"></div></div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="bottom-nav bottom-nav--pill" aria-label="Primary">
+      <a href="index.html" class="bottom-nav__btn" aria-current="page" title="Clock">
+        <svg class="bottom-nav__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 2"/>
+        </svg>
+      </a>
+      <a href="section2.html" class="bottom-nav__btn" title="Add">
+        <svg class="bottom-nav__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </a>
+      <a href="section3.html" class="bottom-nav__btn" title="List">
+        <svg class="bottom-nav__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 6h11M9 12h11M9 18h11"/>
+          <circle cx="5.5" cy="6" r="1.25" fill="none"/><circle cx="5.5" cy="12" r="1.25" fill="none"/><circle cx="5.5" cy="18" r="1.25" fill="none"/>
+        </svg>
+      </a>
+      <a href="#" class="bottom-nav__btn" title="Globe">
+        <svg class="bottom-nav__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M3 12h18M12 3a15 15 0 000 18M12 3a15 15 0 010 18"/>
+        </svg>
+      </a>
+      <a href="#" class="bottom-nav__btn" title="Profile">
+        <svg class="bottom-nav__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M6 20v-1a6 6 0 0112 0v1"/>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>

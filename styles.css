@@ -1,6 +1,13 @@
 /* Figma nodes 22-34, 22-35, 22-36 — layout from design reference */
+
+/* Cross-document view transitions (Chrome 126+): home ↔ group and other same-origin navigations */
+@view-transition {
+  navigation: auto;
+}
+
 :root {
-  --shell-max: 390px;
+  --shell-max: 440px;
+  --shell-height: 956px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -16,6 +23,8 @@
   --s1-card-red: #c62828;
   --s1-dock-bg: #0d1642;
   --s1-dock-h: 72px;
+  /* Matches fixed pill nav width — List (3rd) sits on this strip’s horizontal center */
+  --s1-pill-width: min(320px, calc(100vw - 40px));
 
   /* Screen 2 (22-35) */
   --s2-bg: #e64a19;
@@ -59,9 +68,11 @@ body {
 }
 
 .shell {
+  width: var(--shell-max);
   max-width: var(--shell-max);
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: var(--shell-height);
+  height: var(--shell-height);
   position: relative;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
@@ -92,149 +103,225 @@ body.page-index .app__header {
   display: none;
 }
 
+body.page-index .app {
+  /* Fill space above fixed pill nav so stacked cards can sit low and centered */
+  min-height: calc(100vh - var(--s1-dock-h) - 24px - var(--safe-bottom));
+}
+
 body.page-index .app__main {
-  padding: 14px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px 10px;
 }
 
 .s1-top-card {
-  background: var(--s1-top-card-bg);
-  border-radius: 18px;
-  padding: 12px 12px 14px;
+  background: linear-gradient(180deg, #b6c4ff 0%, #fffcfc 100%);
+  border-radius: 20px;
+  padding: 14px 14px 16px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 16px rgba(26, 35, 126, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.s1-top-card__header {
-  height: 10px;
-  background: var(--s1-header-bar);
-  border-radius: 5px;
-  margin-bottom: 8px;
-}
-
-.s1-top-card__sub {
-  height: 8px;
-  background: var(--s1-navy);
-  border-radius: 4px;
+.s1-top-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 12px;
-  max-width: 100%;
+}
+
+.s1-top-card__month {
+  margin: 0;
+  color: #fffcfc;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 0.85;
+}
+
+.s1-top-card__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.s1-top-card__nav-btn {
+  width: 41px;
+  height: 41px;
+  background: #fffcfc;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.s1-top-card__nav-btn::before,
+.s1-top-card__nav-btn::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 5px;
+  background: #1f285b;
+  border-radius: 4px;
+  left: 12px;
+}
+
+.s1-top-card__nav-btn--left::before {
+  top: 14px;
+  transform: rotate(-30deg);
+}
+
+.s1-top-card__nav-btn--left::after {
+  top: 22px;
+  transform: rotate(30deg);
+}
+
+.s1-top-card__nav-btn--right::before {
+  top: 14px;
+  transform: rotate(30deg);
+}
+
+.s1-top-card__nav-btn--right::after {
+  top: 22px;
+  transform: rotate(-30deg);
+}
+
+.s1-top-card__bar {
+  height: 20px;
+  background: #1f285b;
+  border-radius: 10px;
+  margin-bottom: 19px;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  gap: 16px 7px;
 }
 
 .calendar-grid__cell {
-  aspect-ratio: 1;
-  max-height: 34px;
-  border-radius: 50%;
-  background: var(--s1-cell);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 43px;
+  border-radius: 15px;
+  background: #fffcfc;
+  position: relative;
+}
+
+.calendar-grid__cell::before {
+  content: attr(data-day);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #1f285b;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
 }
 
 .calendar-grid__cell--mark {
-  background: var(--s1-cell-mark);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
+  background: #fffcfc;
+}
+
+.calendar-grid__cell--mark::before {
+  color: #ff3c00;
+}
+
+a.calendar-grid__cell {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a.calendar-grid__cell:focus-visible {
+  outline: 2px solid var(--s1-navy);
+  outline-offset: 2px;
+}
+
+a.calendar-grid__cell--mark:hover {
+  filter: brightness(1.08);
+}
+
+a.calendar-grid__cell--mark:active {
+  filter: brightness(0.94);
 }
 
 .stack-cards {
   position: relative;
-  height: 188px;
-  margin: 8px 4px 8px;
+  height: 488px;
+  margin: 0;
+  overflow: visible;
 }
 
-.stack-cards__item {
+body.page-index .stack-cards {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 6px;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.figma-stack {
+  position: relative;
+  width: 472.478px;
+  height: 488px;
+  margin: 0;
+  left: -14px;
+  top: 30px;
+}
+
+.figma-stack__full {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.figma-stack__red-link {
   position: absolute;
-  left: 50%;
-  width: 86%;
-  max-width: 320px;
-  margin-left: -43%;
-  border-radius: 16px;
-  padding: 16px 18px;
-  min-height: 72px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
-  transform-origin: center bottom;
-}
-
-.stack-cards__item:nth-child(1) {
-  top: 0;
-  z-index: 3;
-  background: var(--s1-card-blue);
-  transform: translateX(-50%) rotate(-14deg);
-}
-
-.stack-cards__item:nth-child(2) {
-  top: 36px;
+  left: 15px;
+  top: 257px;
+  width: 442px;
+  height: 231px;
   z-index: 2;
-  background: var(--s1-card-yellow);
-  transform: translateX(-46%) rotate(-4deg);
-}
-
-.stack-cards__item:nth-child(3) {
-  top: 72px;
-  z-index: 1;
-  background: var(--s1-card-red);
-  transform: translateX(-54%) rotate(6deg);
-}
-
-.stack-cards__bar {
-  height: 12px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.95);
-  max-width: 78%;
-}
-
-/* Floating pill dock */
-.bottom-nav--pill {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(12px + var(--safe-bottom));
-  width: calc(100% - 40px);
-  max-width: 320px;
-  min-height: 56px;
-  padding: 10px 14px;
-  background: var(--s1-dock-bg);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-  border-radius: 999px;
-  box-shadow: 0 8px 28px rgba(13, 22, 66, 0.45);
-}
-
-.bottom-nav--pill .bottom-nav__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  text-decoration: none;
-  transition: background 0.15s ease;
+  border-radius: 28px;
   -webkit-tap-highlight-color: transparent;
 }
 
-.bottom-nav--pill .bottom-nav__btn:hover {
-  background: rgba(255, 255, 255, 0.22);
+/* Index: Figma corner nav (nodes 85:1193 left, 85:1194 right) — positioned to shell corners */
+.shell-corner-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(12px + var(--safe-bottom));
+  height: 0;
+  pointer-events: none;
+  z-index: 100;
 }
 
-.bottom-nav--pill .bottom-nav__btn[aria-current="page"] {
-  background: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+.shell-corner-nav__cluster {
+  position: absolute;
+  bottom: 0;
+  pointer-events: auto;
+  line-height: 0;
 }
 
-.bottom-nav--pill .bottom-nav__icon {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  fill: none !important;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.shell-corner-nav__cluster--left {
+  left: 20px;
+}
+
+.shell-corner-nav__cluster--right {
+  right: 20px;
+}
+
+.shell-corner-nav__art {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(220px, 50%);
 }
 
 /* ——— Page 2 ——— */
@@ -257,6 +344,64 @@ body.page-section2 .app__header {
 
 body.page-section2 .app__title {
   display: none;
+}
+
+.section2-shell-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section2-redtab-link {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32px;
+  height: 228px;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section5-tab-tint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33px;
+  height: 227px;
+  background: #1565c0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.section5-tab-label {
+  position: absolute;
+  left: 38px;
+  top: 90px;
+  margin: 0;
+  color: #fffcfc;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.4px;
+  text-transform: lowercase;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.section5-shell-base {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section5-blue-overlay {
+  position: absolute;
+  left: 56%;
+  top: 156px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 4;
 }
 
 .s2-topbar {
@@ -428,6 +573,42 @@ body.page-section3 .app__main {
   padding: 0 16px 20px;
 }
 
+.section3-shell-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section4-shell-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section4-center-art {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 466px;
+  height: 472px;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: block;
+  pointer-events: none;
+}
+
+.section4-center-badge {
+  position: absolute;
+  left: 50%;
+  top: calc(46% + 18.5px);
+  width: 68px;
+  height: 68px;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  display: block;
+  pointer-events: none;
+}
+
 .s3-preview {
   width: 112px;
   height: 112px;
@@ -546,5 +727,36 @@ body.page-section3 .app__main {
 
   body.page-section3 {
     background: linear-gradient(180deg, #90a4ae 0%, var(--s3-bg-b) 45%);
+  }
+}
+
+/* Swipe-up style transition between full-page snapshots (matches Figma “push up” screen change) */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-swipe-up-out 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-swipe-up-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes vt-swipe-up-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes vt-swipe-up-out {
+  to {
+    opacity: 0.75;
+    transform: translateY(-12%) scale(0.98);
   }
 }

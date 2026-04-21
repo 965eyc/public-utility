@@ -352,6 +352,16 @@ body.page-section2 .app__title {
   height: 100%;
 }
 
+.section2-profile-mark {
+  position: absolute;
+  width: 139px;
+  height: 153px;
+  left: 40px;
+  top: 320px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .section2-redtab-link {
   position: absolute;
   left: 0;
@@ -585,6 +595,87 @@ body.page-section3 .app__main {
   height: 100%;
 }
 
+body.page-section7 {
+  background: #90a4ae;
+}
+
+body.page-section7 .shell {
+  overflow: hidden;
+  --section7-foreground-shift-y: -32px;
+}
+
+.section7-shell-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.section7-top-card-art {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 271px;
+  height: 276px;
+  transform: translate(-50%, var(--section7-foreground-shift-y));
+  z-index: 3;
+  display: block;
+  pointer-events: none;
+}
+
+.section7-profile-stack {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(449px, 100%);
+  max-height: 100%;
+  transform: translate(-50%, calc(-50% + 126px + var(--section7-foreground-shift-y)));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.section7-profile-stack .section7-profile-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 449 / 664;
+  position: relative;
+  z-index: 0;
+}
+
+.section7-profile-list-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(calc(-50% + 107px), -50%) scale(1.5);
+  width: 88%;
+  height: auto;
+  max-width: 396px;
+  aspect-ratio: 548 / 364;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+}
+
+.section7-bottom-right-link {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  width: 68px;
+  height: 68px;
+  z-index: 4;
+  display: block;
+}
+
+.section7-bottom-right-badge {
+  width: 68px;
+  height: 68px;
+  display: block;
+  pointer-events: none;
+}
+
 .section4-center-art {
   position: absolute;
   left: 50%;
@@ -607,6 +698,29 @@ body.page-section3 .app__main {
   z-index: 4;
   display: block;
   pointer-events: none;
+}
+
+.section4-bottom-right-icon {
+  position: absolute;
+  right: 20px;
+  bottom: calc(20px + var(--safe-bottom));
+  width: 68px;
+  height: 68px;
+  z-index: 5;
+  line-height: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section4-bottom-right-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section4-bottom-right-icon:focus-visible {
+  outline: 2px solid #1f285b;
+  outline-offset: 3px;
+  border-radius: 50%;
 }
 
 .s3-preview {

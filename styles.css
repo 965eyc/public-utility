@@ -417,6 +417,111 @@ body.page-section2 .app__title {
   left: calc(408 / 450 * 100%);
 }
 
+/* Section 2: interactive calendar over Figma card (shell viewBox 450×994) */
+.section2-calendar-layer {
+  position: absolute;
+  left: calc(10 / 450 * 100%);
+  top: calc(557 / 994 * 100%);
+  width: calc(429 / 450 * 100%);
+  height: calc(428 / 994 * 100%);
+  z-index: 5;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+body.page-section2 .section2-calendar-layer .section2-calendar.s1-top-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: 4px solid #ff3c00;
+  border-radius: 18px;
+  padding: 8px 8px 10px;
+  background: linear-gradient(180deg, #ffd4b0 0%, #fff0e6 52%, #fffcfc 100%);
+  box-shadow: none;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__top {
+  align-items: center;
+  background: transparent;
+  border-radius: 0;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__month {
+  font-size: calc(clamp(0.8125rem, 2.6vw, 1rem) + 15px);
+  font-weight: 700;
+  color: #fffcfc;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav {
+  gap: 6px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn::before,
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn::after {
+  width: 14px;
+  height: 4px;
+  left: 9px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn--left::before {
+  top: 11px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn--left::after {
+  top: 17px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn--right::before {
+  top: 11px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn--right::after {
+  top: 17px;
+}
+
+body.page-section2 .section2-calendar-layer .s1-top-card__bar {
+  height: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+body.page-section2 .section2-calendar-layer .calendar-grid {
+  flex: 1;
+  min-height: 0;
+  gap: 5px 4px;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+body.page-section2 .section2-calendar-layer .calendar-grid__cell {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 1;
+  max-height: 48px;
+  border-radius: 12px;
+}
+
+body.page-section2 .section2-calendar-layer .calendar-grid__cell::before {
+  font-size: 16px;
+}
+
+body.page-section2 .section2-calendar-layer .calendar-grid__cell:not([data-day])::before {
+  content: none;
+}
+
 .section2-profile-mark {
   position: absolute;
   width: 139px;
@@ -425,6 +530,21 @@ body.page-section2 .app__title {
   top: 320px;
   pointer-events: none;
   z-index: 1;
+}
+
+.section2-profile-mark__static-day {
+  display: none;
+}
+
+.section2-profile-mark__day {
+  fill: #fffcfc;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 132px;
+  font-weight: 700;
+  line-height: 1;
+  text-anchor: middle;
+  dominant-baseline: text-after-edge;
+  transform: translateY(15px);
 }
 
 .section2-redtab-link {
@@ -584,7 +704,7 @@ body.page-section2 .app__title {
 
 .s2-hero-card__left {
   background: #f5f5f5;
-  border-radius: 12px;
+  border-radius: 0;
   aspect-ratio: 1;
   min-height: 88px;
 }
@@ -667,7 +787,7 @@ body.page-section3 {
 }
 
 body.page-section3 .shell {
-  background: transparent;
+  background: var(--s3-bg-a);
   padding-bottom: calc(24px + var(--safe-bottom));
 }
 
@@ -687,6 +807,28 @@ body.page-section3 .app__main {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.section3-top-overlay {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 171px;
+  height: 115px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.section3-second-overlay {
+  position: absolute;
+  left: 50%;
+  top: 300px;
+  width: 217px;
+  height: 47px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
 }
 
 .section4-shell-art {
@@ -974,3 +1116,4 @@ body.page-section7 .shell {
     transform: translateY(-12%) scale(0.98);
   }
 }
+

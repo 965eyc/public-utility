@@ -831,6 +831,89 @@ body.page-section3 .app__main {
   pointer-events: none;
 }
 
+.section3-third-overlay {
+  position: absolute;
+  left: 50%;
+  top: 400px;
+  width: 282px;
+  height: 107px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.section3-fourth-overlay {
+  position: absolute;
+  left: 50%;
+  top: 560px;
+  width: 267px;
+  height: 119px;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.section3-popup-trigger {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section3-popup-trigger:focus,
+.section3-popup-trigger:focus-visible,
+.section3-popup-trigger:active {
+  outline: none;
+}
+
+.section3-popup:not([hidden]) {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.section3-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 40, 91, 0.42);
+}
+
+.section3-popup__panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(86%, 360px);
+  min-height: 220px;
+  transform: translate(-50%, -50%);
+  background: #fffcfc;
+  border-radius: 20px;
+  padding: 18px 16px 16px;
+  z-index: 1;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.section3-popup__close {
+  border: 0;
+  background: #1f285b;
+  color: #fffcfc;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.section3-popup__title {
+  margin: 12px 0 10px;
+  font-size: 20px;
+  line-height: 1.2;
+  color: #1f285b;
+}
+
+.section3-popup__content {
+  min-height: 120px;
+  border: 2px dashed #c1c9f2;
+  border-radius: 12px;
+  padding: 10px;
+}
+
 .section4-shell-art {
   display: block;
   width: 100%;

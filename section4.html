@@ -3,30 +3,435 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Screen 4</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <title>Wheel Picker</title>
+  <style>
+    :root {
+      --bg: #edf1ff;
+      --card: #ffffff;
+      --text: #1f285b;
+      --accent: #4379ff;
+      --accent-2: #ff3c00;
+      --muted: #6f7696;
+      --ring: rgba(67, 121, 255, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg) 0%, #dfe6ff 100%);
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      padding: 20px 16px 28px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(31, 40, 91, 0.12);
+      padding: 16px;
+    }
+
+    .title {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .left-panel textarea {
+      width: 100%;
+      min-height: 260px;
+      resize: vertical;
+      border: 2px solid #d6dcf6;
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      color: var(--text);
+      line-height: 1.35;
+      outline: none;
+    }
+
+    .left-panel textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    .helper {
+      margin: 8px 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .spin-btn {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .spin-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .clear-btn {
+      background: #ecf0ff;
+      color: var(--text);
+    }
+
+    .entry-count {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(520px, 100%);
+      margin: 0 auto;
+      aspect-ratio: 1;
+    }
+
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-top: 26px solid var(--accent-2);
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+      z-index: 2;
+    }
+
+    .modal[hidden] {
+      display: none;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+    }
+
+    .modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(31, 40, 91, 0.45);
+    }
+
+    .modal__panel {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 420px);
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal__title {
+      margin: 0;
+      font-size: 1.35rem;
+      color: var(--text);
+    }
+
+    .modal__winner {
+      margin: 10px 0 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      word-break: break-word;
+    }
+
+    .modal__close {
+      background: var(--accent);
+      color: #fff;
+      min-width: 112px;
+    }
+
+    @media (min-width: 860px) {
+      .layout {
+        grid-template-columns: 380px 1fr;
+        align-items: start;
+      }
+    }
+  </style>
 </head>
-<body class="page-section4">
-  <nav class="sr-only" aria-label="Pages">
-    <a href="index.html">Screen 1</a>
-    <a href="section2.html">Screen 2</a>
-    <a href="section3.html">Screen 3</a>
-    <a href="section4.html">Screen 4</a>
-  </nav>
-  <div class="shell">
-    <img src="assets/section4-shell.svg" alt="" class="section4-shell-art" decoding="async">
-    <img src="assets/section4-center-art.svg" alt="" class="section4-center-art" decoding="async">
-    <img src="assets/section4-center-badge.svg" alt="" class="section4-center-badge" decoding="async">
-    <a class="section4-bottom-right-icon" href="index.html" aria-label="Go to Screen 1">
-      <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="34" cy="34" r="34" fill="#B6C4FF"/>
-        <path d="M51 37C52.6569 37 54 35.6569 54 34C54 32.3431 52.6569 31 51 31V34V37ZM12.8787 31.8787C11.7071 33.0503 11.7071 34.9497 12.8787 36.1213L31.9706 55.2132C33.1421 56.3848 35.0416 56.3848 36.2132 55.2132C37.3848 54.0416 37.3848 52.1421 36.2132 50.9706L19.2426 34L36.2132 17.0294C37.3848 15.8579 37.3848 13.9584 36.2132 12.7868C35.0416 11.6152 33.1421 11.6152 31.9706 12.7868L12.8787 31.8787ZM51 34V31L15 31V34V37L51 37V34Z" fill="#4379FF"/>
-      </svg>
-    </a>
+<body>
+  <main class="app">
+    <section class="card">
+      <h1 class="title">Wheel of Names (Simplified)</h1>
+      <div class="layout">
+        <div class="left-panel">
+          <label for="entries" class="title" style="font-size:1rem;margin-bottom:8px;display:block;">Entries (one per line)</label>
+          <textarea id="entries" placeholder="Alice&#10;Bob&#10;Charlie&#10;Dana"></textarea>
+          <p class="helper">Empty lines are ignored. Add at least 2 entries to spin.</p>
+          <div class="controls">
+            <button id="spinBtn" class="spin-btn" disabled>Spin</button>
+            <button id="clearBtn" class="clear-btn" type="button">Clear</button>
+            <span id="entryCount" class="entry-count">0 valid entries</span>
+          </div>
+        </div>
+
+        <div class="right-panel">
+          <div class="wheel-wrap">
+            <div class="pointer" aria-hidden="true"></div>
+            <canvas id="wheelCanvas" width="700" height="700" aria-label="Wheel"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="winnerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle" hidden>
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__panel">
+      <h2 id="winnerTitle" class="modal__title">Winner:</h2>
+      <p id="winnerText" class="modal__winner"></p>
+      <button id="closeModalBtn" class="modal__close" type="button">Close</button>
+    </div>
   </div>
+
+  <script>
+    /*
+      How it works:
+      - Parse textarea lines into entries (ignoring empty lines).
+      - Draw one wheel segment per entry on a canvas.
+      - On spin, pick a random winning segment index.
+      - Compute a target wheel rotation so that winner ends under the fixed top pointer.
+      - Animate wheel rotation with easing, then show winner in a popup modal.
+    */
+    (function () {
+      const entriesEl = document.getElementById("entries");
+      const spinBtn = document.getElementById("spinBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const entryCount = document.getElementById("entryCount");
+      const canvas = document.getElementById("wheelCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const modal = document.getElementById("winnerModal");
+      const winnerText = document.getElementById("winnerText");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+
+      const colors = [
+        "#4379FF", "#FF8A65", "#26C6DA", "#AB47BC", "#FBC02D", "#66BB6A",
+        "#5C6BC0", "#EF5350", "#8D6E63", "#29B6F6", "#EC407A", "#9CCC65"
+      ];
+
+      let entries = [];
+      let isSpinning = false;
+      let currentRotation = 0;
+
+      function parseEntries() {
+        entries = entriesEl.value
+          .split("\n")
+          .map(function (line) { return line.trim(); })
+          .filter(function (line) { return line.length > 0; });
+
+        entryCount.textContent = entries.length + (entries.length === 1 ? " valid entry" : " valid entries");
+        spinBtn.disabled = entries.length < 2 || isSpinning;
+      }
+
+      function drawWheel() {
+        const size = canvas.width;
+        const center = size / 2;
+        const radius = center - 12;
+        const n = entries.length;
+
+        ctx.clearRect(0, 0, size, size);
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(currentRotation);
+
+        if (n === 0) {
+          ctx.beginPath();
+          ctx.arc(0, 0, radius, 0, Math.PI * 2);
+          ctx.fillStyle = "#eef1ff";
+          ctx.fill();
+          ctx.strokeStyle = "#d4dbfb";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          ctx.fillStyle = "#6f7696";
+          ctx.font = "600 28px Inter, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("Add entries to begin", 0, 0);
+          ctx.restore();
+          return;
+        }
+
+        const segmentAngle = (Math.PI * 2) / n;
+        for (let i = 0; i < n; i += 1) {
+          const start = i * segmentAngle;
+          const end = start + segmentAngle;
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.arc(0, 0, radius, start, end);
+          ctx.closePath();
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.save();
+          ctx.rotate(start + segmentAngle / 2);
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "600 24px Inter, sans-serif";
+          const label = entries[i].length > 22 ? entries[i].slice(0, 22) + "..." : entries[i];
+          ctx.fillText(label, radius - 20, 0);
+          ctx.restore();
+        }
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 34, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#cdd8ff";
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function spin() {
+        if (entries.length < 2 || isSpinning) return;
+
+        isSpinning = true;
+        spinBtn.disabled = true;
+
+        const winningIndex = Math.floor(Math.random() * entries.length);
+        const n = entries.length;
+        const segmentAngle = (Math.PI * 2) / n;
+        const centerOfWinner = winningIndex * segmentAngle + segmentAngle / 2;
+
+        const desiredFinal = -Math.PI / 2 - centerOfWinner;
+        const minTurns = 6;
+        const maxTurns = 10;
+        const fullTurns = minTurns + Math.floor(Math.random() * (maxTurns - minTurns + 1));
+
+        const baseRotation = currentRotation % (Math.PI * 2);
+        let delta = desiredFinal - baseRotation;
+        while (delta < 0) delta += Math.PI * 2;
+        const targetRotation = currentRotation + delta + fullTurns * Math.PI * 2;
+
+        const duration = 4200;
+        const start = performance.now();
+        const startRotation = currentRotation;
+
+        function animate(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = easeOutCubic(progress);
+
+          currentRotation = startRotation + (targetRotation - startRotation) * eased;
+          drawWheel();
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+            return;
+          }
+
+          currentRotation = targetRotation;
+          drawWheel();
+          isSpinning = false;
+          parseEntries();
+          showWinner(entries[winningIndex]);
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      function showWinner(name) {
+        winnerText.textContent = name;
+        modal.hidden = false;
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+      }
+
+      entriesEl.addEventListener("input", function () {
+        parseEntries();
+        drawWheel();
+      });
+
+      spinBtn.addEventListener("click", spin);
+
+      clearBtn.addEventListener("click", function () {
+        if (isSpinning) return;
+        entriesEl.value = "";
+        parseEntries();
+        drawWheel();
+      });
+
+      closeModalBtn.addEventListener("click", closeModal);
+      modal.querySelector("[data-close-modal]").addEventListener("click", closeModal);
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !modal.hidden) {
+          closeModal();
+        }
+      });
+
+      entriesEl.value = "Alice\nBob\nCharlie\nDana\nElliot";
+      parseEntries();
+      drawWheel();
+    })();
+  </script>
 </body>
 </html>
 

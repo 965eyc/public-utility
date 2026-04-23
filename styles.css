@@ -280,12 +280,35 @@ body.page-index .stack-cards {
   pointer-events: none;
 }
 
+/* Stack hit-zones: contiguous bands (488px art) so blue / yellow / red never overlap */
+.figma-stack__blue-link {
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  width: 442px;
+  height: 219px;
+  z-index: 2;
+  border-radius: 28px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.figma-stack__yellow-link {
+  position: absolute;
+  left: 15px;
+  top: 231px;
+  width: 442px;
+  height: 71px;
+  z-index: 2;
+  border-radius: 28px;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .figma-stack__red-link {
   position: absolute;
   left: 15px;
-  top: 257px;
+  top: 302px;
   width: 442px;
-  height: 231px;
+  height: 186px;
   z-index: 2;
   border-radius: 28px;
   -webkit-tap-highlight-color: transparent;
@@ -350,6 +373,48 @@ body.page-section2 .app__title {
   display: block;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+}
+
+.section2-avatar-links {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.section2-avatar-hit {
+  position: absolute;
+  top: calc(212 / 994 * 100%);
+  width: calc(65 / 450 * 100%);
+  height: calc(65 / 994 * 100%);
+  border-radius: 38%;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section2-avatar-hit--1 {
+  left: calc(14 / 450 * 100%);
+}
+
+.section2-avatar-hit--2 {
+  left: calc(92 / 450 * 100%);
+}
+
+.section2-avatar-hit--3 {
+  left: calc(171 / 450 * 100%);
+}
+
+.section2-avatar-hit--4 {
+  left: calc(250 / 450 * 100%);
+}
+
+.section2-avatar-hit--5 {
+  left: calc(329 / 450 * 100%);
+}
+
+.section2-avatar-hit--6 {
+  left: calc(408 / 450 * 100%);
 }
 
 .section2-profile-mark {
@@ -363,6 +428,16 @@ body.page-section2 .app__title {
 }
 
 .section2-redtab-link {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32px;
+  height: 228px;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section5-bluetab-link {
   position: absolute;
   left: 0;
   right: 0;
@@ -412,6 +487,31 @@ body.page-section2 .app__title {
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 4;
+}
+
+.section6-shell-base {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.section6-yellow-overlay {
+  position: absolute;
+  left: 56%;
+  top: 156px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.section6-yellowtab-link {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32px;
+  height: 228px;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .s2-topbar {

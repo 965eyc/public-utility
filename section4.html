@@ -61,9 +61,61 @@
       pointer-events: none;
     }
 
+    .no-filter-trigger {
+      position: absolute;
+      top: 139px;
+      left: 360px;
+      width: 36px;
+      height: 26px;
+      z-index: 4;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .overlay-filter-dropdown[hidden] {
+      display: none;
+    }
+
+    .overlay-filter-dropdown {
+      position: absolute;
+      top: 170px;
+      left: 270px;
+      z-index: 6;
+      min-width: 138px;
+      background: #ffffff;
+      border: 1px solid #d6dcf6;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(31, 40, 91, 0.18);
+      padding: 6px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .overlay-filter-dropdown__option {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #1f285b;
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .overlay-filter-dropdown__option:hover,
+    .overlay-filter-dropdown__option:focus-visible {
+      background: #f2f5ff;
+      outline: none;
+    }
+
     .wheel-spin-trigger {
       position: absolute;
-      top: 560px;
+      top: 640px;
       left: 144px;
       width: 153px;
       height: 74px;
@@ -143,7 +195,7 @@
       width: min(92vw, 460px);
       background: #fff;
       border-radius: 18px;
-      padding: 16px;
+      padding: 16px 16px 70px;
       min-height: 520px;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
     }
@@ -189,15 +241,67 @@
     .entry-popup__actions {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
+      gap: 6px;
       margin-top: 12px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 2px;
+    }
+
+    .entry-popup__tag-btn {
+      flex: 0 0 140px;
+      width: 140px;
+      min-width: 140px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+      border: 2px solid transparent;
+      white-space: nowrap;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .entry-popup__tag-btn.is-active {
+      border-color: #1f285b;
+      box-shadow: 0 0 0 2px rgba(31, 40, 91, 0.18);
     }
 
     .entry-popup__confirm {
-      background: var(--accent);
-      color: #fff;
+      position: absolute;
+      right: -37px;
+      bottom: 3px;
       min-width: 106px;
+      background: transparent;
+      color: #6f7696;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+    }
+
+    .entry-popup__confirm svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .entry-popup__stub {
+      min-width: 106px;
+      background: #ecf0ff;
+      color: #6f7696;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      cursor: default;
+    }
+
+    .entry-popup__stub svg {
+      width: 18px;
+      height: 18px;
+      display: block;
     }
 
     .entry-list {
@@ -242,14 +346,17 @@
       height: 28px;
       min-width: 28px;
       padding: 0;
-      border-radius: 50%;
+      margin-left: auto;
       border: 0;
-      background: #ffe6de;
-      color: #ff3c00;
-      font-size: 18px;
+      background: transparent;
+      color: #4f5673;
+      font-size: 20px;
       line-height: 1;
       font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .entry-list__delete:focus-visible {
@@ -469,6 +576,16 @@
         </clipPath>
       </defs>
     </svg>
+    <button id="clearFilterBtn" class="no-filter-trigger" type="button" aria-label="No filter"></button>
+    <div id="overlayFilterDropdown" class="overlay-filter-dropdown" role="menu" aria-label="Filter options" hidden>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="">No filter</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="line">$</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="circle">$$</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="diamond">$$$</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="triangle">low effort</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="square">medium effort</button>
+      <button class="overlay-filter-dropdown__option" type="button" data-dropdown-filter="star">high effort</button>
+    </div>
     <button id="openEntryPopupBtn" class="layout-overlay-icon" type="button" aria-label="Add entry">
       <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="34" cy="34" r="34" fill="#4379FF"/>
@@ -509,11 +626,33 @@
       </div>
       <input id="entryInput" class="entry-popup__input" type="text" maxlength="60" placeholder="Type one entry name">
       <div class="entry-popup__actions">
-        <button id="confirmEntryBtn" class="entry-popup__confirm" type="button">Confirm</button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="line" aria-label="Line tag filter">
+          $
+        </button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="circle" aria-label="Circle tag filter">
+          $$
+        </button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="diamond" aria-label="Diamond tag filter">
+          $$$
+        </button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="triangle" aria-label="Triangle tag filter">
+          low effort
+        </button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="square" aria-label="Square tag filter">
+          medium effort
+        </button>
+        <button class="entry-popup__tag-btn" type="button" data-entry-tag="star" aria-label="Star tag filter">
+          high effort
+        </button>
         <span id="entryCount" class="entry-count"></span>
       </div>
       <div id="entryList" class="entry-list" role="list" aria-label="Wheel entries"></div>
       <p class="helper"></p>
+      <button id="confirmEntryBtn" class="entry-popup__confirm" type="button" aria-label="Confirm">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 10.5L8.2 14.5L16 6.5" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -535,23 +674,52 @@
       const canvas = document.getElementById("wheelCanvas");
       const ctx = canvas.getContext("2d");
       const spinTriggerBtn = document.getElementById("spinTriggerBtn");
+      const clearFilterBtn = document.getElementById("clearFilterBtn");
+      const overlayFilterDropdown = document.getElementById("overlayFilterDropdown");
       const openEntryPopupBtn = document.getElementById("openEntryPopupBtn");
       const closeEntryPopupBtn = document.getElementById("closeEntryPopupBtn");
       const entryPopup = document.getElementById("entryPopup");
+      const tagButtons = Array.from(entryPopup.querySelectorAll("[data-entry-tag]"));
 
       const modal = document.getElementById("winnerModal");
       const winnerText = document.getElementById("winnerText");
       const closeModalBtn = document.getElementById("closeModalBtn");
 
-      const colors = [
-        "#4379FF", "#FF8A65", "#26C6DA", "#AB47BC", "#FBC02D", "#66BB6A",
-        "#5C6BC0", "#EF5350", "#8D6E63", "#29B6F6", "#EC407A", "#9CCC65"
-      ];
+      const tagPalette = {
+        line: { bg: "#FFD0C2", text: "#1f285b" },
+        circle: { bg: "#B1C7FF", text: "#1f285b" },
+        diamond: { bg: "#FFE78F", text: "#1f285b" },
+        triangle: { bg: "#FFD741", text: "#1f285b" },
+        square: { bg: "#4379FF", text: "#ffffff" },
+        star: { bg: "#FF3C00", text: "#ffffff" },
+        default: { bg: "#ecf0ff", text: "#1f285b" }
+      };
 
       let entries = [];
       let editingIndex = null;
       let isSpinning = false;
       let currentRotation = 0;
+      let activeTagFilter = null;
+      let pendingEntryTag = null;
+
+      function getVisibleEntries() {
+        if (!activeTagFilter) return entries;
+        return entries.filter(function (entry) {
+          return entry.tag === activeTagFilter;
+        });
+      }
+
+      function updateTagButtons() {
+        tagButtons.forEach(function (btn) {
+          const tag = btn.getAttribute("data-entry-tag");
+          const isActive = tag === activeTagFilter;
+          const palette = tagPalette[tag] || tagPalette.default;
+          btn.style.backgroundColor = palette.bg;
+          btn.style.color = palette.text;
+          btn.classList.toggle("is-active", isActive);
+          btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
+      }
 
       function updateEntryCount() {
         entryCount.textContent = "";
@@ -559,20 +727,24 @@
 
       function renderEntryList() {
         entryListEl.innerHTML = "";
-        entries.forEach(function (name, index) {
+        getVisibleEntries().forEach(function (entry) {
+          const palette = tagPalette[entry.tag] || tagPalette.default;
           const card = document.createElement("div");
           card.className = "entry-list__card";
           card.setAttribute("role", "listitem");
           card.setAttribute("tabindex", "0");
-          card.setAttribute("data-entry-index", String(index));
+          card.setAttribute("data-entry-id", String(entry.id));
+          card.style.backgroundColor = palette.bg;
+          card.style.borderColor = palette.bg;
+          card.style.color = palette.text;
           const nameEl = document.createElement("span");
           nameEl.className = "entry-list__name";
-          nameEl.textContent = name;
+          nameEl.textContent = entry.name;
           const deleteBtn = document.createElement("button");
           deleteBtn.type = "button";
           deleteBtn.className = "entry-list__delete";
           deleteBtn.setAttribute("data-entry-delete", "true");
-          deleteBtn.setAttribute("aria-label", "Delete " + name);
+          deleteBtn.setAttribute("aria-label", "Delete " + entry.name);
           deleteBtn.textContent = "x";
           card.appendChild(nameEl);
           card.appendChild(deleteBtn);
@@ -581,6 +753,7 @@
       }
 
       function syncEntriesView() {
+        updateTagButtons();
         updateEntryCount();
         renderEntryList();
         drawWheel();
@@ -589,6 +762,7 @@
       function resetEntryEditor() {
         editingIndex = null;
         entryInputEl.value = "";
+        pendingEntryTag = activeTagFilter;
       }
 
       function openEntryPopupNew() {
@@ -601,7 +775,10 @@
         if (index < 0 || index >= entries.length) return;
         editingIndex = index;
         entryPopup.hidden = false;
-        entryInputEl.value = entries[index];
+        entryInputEl.value = entries[index].name;
+        pendingEntryTag = entries[index].tag || null;
+        activeTagFilter = pendingEntryTag;
+        updateTagButtons();
         entryInputEl.focus();
         entryInputEl.select();
       }
@@ -612,11 +789,20 @@
           if (!value) {
             entries.splice(editingIndex, 1);
           } else {
-            entries[editingIndex] = value;
+            entries[editingIndex] = {
+              id: entries[editingIndex].id,
+              name: value,
+              tag: pendingEntryTag
+            };
           }
         } else if (value) {
-          entries.push(value);
+          entries.push({
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+            name: value,
+            tag: pendingEntryTag
+          });
         }
+        activeTagFilter = pendingEntryTag;
         resetEntryEditor();
         syncEntriesView();
       }
@@ -625,7 +811,8 @@
         const size = canvas.width;
         const center = size / 2;
         const radius = center - 12;
-        const n = entries.length;
+        const visibleEntries = getVisibleEntries();
+        const n = visibleEntries.length;
 
         ctx.clearRect(0, 0, size, size);
         ctx.save();
@@ -659,7 +846,7 @@
           ctx.moveTo(0, 0);
           ctx.arc(0, 0, radius, start, end);
           ctx.closePath();
-          ctx.fillStyle = colors[i % colors.length];
+          ctx.fillStyle = (tagPalette[visibleEntries[i].tag] || tagPalette.default).bg;
           ctx.fill();
           ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 2;
@@ -671,7 +858,7 @@
           ctx.textBaseline = "middle";
           ctx.fillStyle = "#ffffff";
           ctx.font = "600 24px Inter, sans-serif";
-          const label = entries[i].length > 22 ? entries[i].slice(0, 22) + "..." : entries[i];
+          const label = visibleEntries[i].name.length > 22 ? visibleEntries[i].name.slice(0, 22) + "..." : visibleEntries[i].name;
           ctx.fillText(label, radius - 20, 0);
           ctx.restore();
         }
@@ -692,12 +879,13 @@
       }
 
       function spin() {
-        if (entries.length < 2 || isSpinning) return;
+        const visibleEntries = getVisibleEntries();
+        if (visibleEntries.length < 2 || isSpinning) return;
 
         isSpinning = true;
 
-        const winningIndex = Math.floor(Math.random() * entries.length);
-        const n = entries.length;
+        const winningIndex = Math.floor(Math.random() * visibleEntries.length);
+        const n = visibleEntries.length;
         const segmentAngle = (Math.PI * 2) / n;
         const centerOfWinner = winningIndex * segmentAngle + segmentAngle / 2;
 
@@ -731,7 +919,7 @@
           currentRotation = targetRotation;
           drawWheel();
           isSpinning = false;
-          showWinner(entries[winningIndex]);
+          showWinner(visibleEntries[winningIndex].name);
         }
 
         requestAnimationFrame(animate);
@@ -756,10 +944,32 @@
       }
 
       spinTriggerBtn.addEventListener("click", spin);
+      clearFilterBtn.addEventListener("click", function () {
+        overlayFilterDropdown.hidden = !overlayFilterDropdown.hidden;
+      });
+      overlayFilterDropdown.addEventListener("click", function (event) {
+        const option = event.target.closest("[data-dropdown-filter]");
+        if (!option || !overlayFilterDropdown.contains(option)) return;
+        const nextTag = option.getAttribute("data-dropdown-filter") || null;
+        activeTagFilter = nextTag;
+        pendingEntryTag = nextTag;
+        overlayFilterDropdown.hidden = true;
+        syncEntriesView();
+      });
       openEntryPopupBtn.addEventListener("click", openEntryPopup);
       closeEntryPopupBtn.addEventListener("click", closeEntryPopup);
       entryPopup.querySelector("[data-close-entry-popup]").addEventListener("click", closeEntryPopup);
       confirmEntryBtn.addEventListener("click", applyEntryInput);
+      tagButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const tag = btn.getAttribute("data-entry-tag");
+          if (!tag) return;
+          const nextTag = activeTagFilter === tag ? null : tag;
+          activeTagFilter = nextTag;
+          pendingEntryTag = nextTag;
+          syncEntriesView();
+        });
+      });
       entryInputEl.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
@@ -769,8 +979,11 @@
       entryListEl.addEventListener("click", function (event) {
         const card = event.target.closest(".entry-list__card");
         if (!card || !entryListEl.contains(card)) return;
-        const index = Number(card.getAttribute("data-entry-index"));
-        if (!Number.isInteger(index)) return;
+        const entryId = card.getAttribute("data-entry-id");
+        const index = entries.findIndex(function (entry) {
+          return String(entry.id) === entryId;
+        });
+        if (index < 0) return;
         const deleteBtn = event.target.closest("[data-entry-delete]");
         if (deleteBtn) {
           if (isSpinning) return;
@@ -785,8 +998,11 @@
         if (event.key !== "Enter" && event.key !== " ") return;
         const card = event.target.closest(".entry-list__card");
         if (!card || !entryListEl.contains(card)) return;
-        const index = Number(card.getAttribute("data-entry-index"));
-        if (!Number.isInteger(index)) return;
+        const entryId = card.getAttribute("data-entry-id");
+        const index = entries.findIndex(function (entry) {
+          return String(entry.id) === entryId;
+        });
+        if (index < 0) return;
         if (event.key === " ") event.preventDefault();
         openEntryPopupEdit(index);
       });
@@ -795,6 +1011,9 @@
       modal.querySelector("[data-close-modal]").addEventListener("click", closeModal);
 
       document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !overlayFilterDropdown.hidden) {
+          overlayFilterDropdown.hidden = true;
+        }
         if (event.key === "Escape" && !modal.hidden) {
           closeModal();
         }
@@ -802,8 +1021,22 @@
           closeEntryPopup();
         }
       });
+      document.addEventListener("click", function (event) {
+        if (overlayFilterDropdown.hidden) return;
+        const clickedTrigger = clearFilterBtn.contains(event.target);
+        const clickedDropdown = overlayFilterDropdown.contains(event.target);
+        if (!clickedTrigger && !clickedDropdown) {
+          overlayFilterDropdown.hidden = true;
+        }
+      });
 
-      entries = ["Alice", "Bob", "Charlie", "Dana", "Elliot"];
+      entries = [
+        { id: "a1", name: "Going to Brunch", tag: "circle" },
+        { id: "a2", name: "Going on a Hike", tag: "star" },
+        { id: "a3", name: "Have a Craft Night", tag: "square" },
+        { id: "a4", name: "Go to a Concert", tag: "diamond" },
+        { id: "a5", name: "Have a Movie Marathon", tag: "triangle" }
+      ];
       syncEntriesView();
     })();
   </script>

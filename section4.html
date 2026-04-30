@@ -25,21 +25,69 @@
       color: var(--text);
       background: linear-gradient(180deg, var(--bg) 0%, #dfe6ff 100%);
       min-height: 100vh;
+      display: flex;
+      justify-content: center;
     }
 
     .app {
-      width: min(1080px, 100%);
+      width: min(440px, 100%);
+      max-width: 440px;
+      min-height: 956px;
+      height: 956px;
       margin: 0 auto;
-      padding: 20px 16px 28px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
       display: grid;
       gap: 16px;
     }
 
+    .shell-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wheel-top-overlay {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      width: 440px;
+      height: 116px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .wheel-spin-trigger {
+      position: absolute;
+      top: 560px;
+      left: 144px;
+      width: 153px;
+      height: 74px;
+      z-index: 3;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .wheel-spin-trigger svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .card {
-      background: var(--card);
+      position: relative;
+      z-index: 1;
+      background: transparent;
       border-radius: 18px;
-      box-shadow: 0 10px 28px rgba(31, 40, 91, 0.12);
+      box-shadow: none;
       padding: 16px;
+      height: 100%;
     }
 
     .title {
@@ -50,30 +98,167 @@
     }
 
     .layout {
+      position: relative;
       display: grid;
       gap: 16px;
+      padding-top: 40px;
+      margin-top: 90px;
     }
 
-    .left-panel textarea {
+    .layout-overlay-icon {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      transform: none;
+      z-index: 4;
+      width: 68px;
+      height: 68px;
+      display: inline-flex;
+      border: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .entry-popup[hidden] {
+      display: none;
+    }
+
+    .entry-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      display: grid;
+      place-items: center;
+    }
+
+    .entry-popup__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(31, 40, 91, 0.45);
+    }
+
+    .left-panel {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 460px);
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 520px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .left-panel__head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .left-panel__close {
+      position: absolute;
+      top: 8px;
+      left: 14px;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #6f7696;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .entry-popup__input {
       width: 100%;
-      min-height: 260px;
-      resize: vertical;
       border: 2px solid #d6dcf6;
       border-radius: 12px;
       padding: 12px;
       font: inherit;
       color: var(--text);
-      line-height: 1.35;
       outline: none;
     }
 
-    .left-panel textarea:focus {
+    .entry-popup__input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 4px var(--ring);
     }
 
+    .entry-popup__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .entry-popup__confirm {
+      background: var(--accent);
+      color: #fff;
+      min-width: 106px;
+    }
+
+    .entry-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .entry-list__card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-radius: 12px;
+      border: 2px solid #d6dcf6;
+      background: #f6f8ff;
+      padding: 10px 12px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .entry-list__card:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--ring);
+    }
+
+    .entry-list__name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .entry-list__delete {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      padding: 0;
+      border-radius: 50%;
+      border: 0;
+      background: #ffe6de;
+      color: #ff3c00;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .entry-list__delete:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     .helper {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       font-size: 0.92rem;
       color: var(--muted);
     }
@@ -121,6 +306,8 @@
       width: min(520px, 100%);
       margin: 0 auto;
       aspect-ratio: 1;
+      left: 5px;
+      top: 100px;
     }
 
     #wheelCanvas {
@@ -128,7 +315,7 @@
       height: 100%;
       display: block;
       border-radius: 50%;
-      background: #fff;
+      background: transparent;
     }
 
     .pointer {
@@ -197,27 +384,105 @@
     @media (min-width: 860px) {
       .layout {
         grid-template-columns: 380px 1fr;
-        align-items: start;
+        align-items: end;
       }
+    }
+
+    .section4-back-link {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 68px;
+      height: 68px;
+      z-index: 5;
+      display: block;
+      line-height: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .section4-back-link svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .section4-back-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 50%;
     }
   </style>
 </head>
 <body>
   <main class="app">
+    <svg class="shell-bg" width="440" height="956" viewBox="0 0 440 956" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g filter="url(#filter0_n_213_1190)">
+        <rect width="440" height="956" fill="url(#paint0_linear_213_1190)"/>
+      </g>
+      <defs>
+        <filter id="filter0_n_213_1190" x="0" y="0" width="440" height="956" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+          <feTurbulence type="fractalNoise" baseFrequency="5 5" stitchTiles="stitch" numOctaves="3" result="noise" seed="1077"/>
+          <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise"/>
+          <feComponentTransfer in="alphaNoise" result="coloredNoise1">
+            <feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+          </feComponentTransfer>
+          <feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped"/>
+          <feFlood flood-color="rgba(0, 0, 0, 0.05)" result="color1Flood"/>
+          <feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1"/>
+          <feMerge result="effect1_noise_213_1190">
+            <feMergeNode in="shape"/>
+            <feMergeNode in="color1"/>
+          </feMerge>
+        </filter>
+        <linearGradient id="paint0_linear_213_1190" x1="220" y1="0" x2="220" y2="956" gradientUnits="userSpaceOnUse">
+          <stop stop-color="white"/>
+          <stop offset="0.360577" stop-color="#EEE2D4"/>
+          <stop offset="0.644231" stop-color="#F6EFE8"/>
+          <stop offset="1" stop-color="white"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <svg class="wheel-top-overlay" width="440" height="116" viewBox="0 0 440 116" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g clip-path="url(#clip0_216_1236)">
+        <g filter="url(#filter0_d_216_1236)">
+          <path d="M404 21H29C17.9543 21 9 29.9543 9 41V67C9 78.0457 17.9543 87 29 87H404C415.046 87 424 78.0457 424 67V41C424 29.9543 415.046 21 404 21Z" fill="#FFFCFC"/>
+        </g>
+        <path d="M379.115 41.2122C378.316 40.1181 376.684 40.1181 375.885 41.2122L361.202 61.3207C360.237 62.6422 361.181 64.5001 362.817 64.5001H392.183C393.819 64.5001 394.763 62.6422 393.798 61.3207L379.115 41.2122Z" fill="#1F285B"/>
+        <path d="M58.8164 68V40H63.0564L76.6964 56.2001C77.0164 56.5734 77.3231 56.9601 77.6164 57.3601C77.9364 57.7334 78.2431 58.1201 78.5364 58.5201C78.4564 57.9334 78.4031 57.24 78.3764 56.44C78.3497 55.6133 78.3364 54.7867 78.3364 53.96V40H83.4564V68H79.8164L65.6564 51.16C65.3364 50.7867 65.0164 50.4134 64.6964 50.0401C64.4031 49.6401 64.1097 49.24 63.8164 48.84C63.8964 49.4267 63.9497 50.1333 63.9764 50.96C64.0031 51.76 64.0164 52.5734 64.0164 53.4001V68H58.8164ZM97.3292 68.52C95.1959 68.52 93.2892 68.0268 91.6092 67.0401C89.9292 66.0534 88.6092 64.7467 87.6492 63.12C86.7159 61.4667 86.2492 59.64 86.2492 57.64C86.2492 55.64 86.7159 53.8133 87.6492 52.16C88.6092 50.5067 89.9292 49.1868 91.6092 48.2001C93.2892 47.2134 95.1959 46.7201 97.3292 46.7201C99.4892 46.7201 101.396 47.2134 103.049 48.2001C104.729 49.1868 106.036 50.5067 106.969 52.16C107.929 53.8133 108.409 55.64 108.409 57.64C108.409 59.64 107.929 61.4667 106.969 63.12C106.036 64.7467 104.729 66.0534 103.049 67.0401C101.396 68.0268 99.4892 68.52 97.3292 68.52ZM97.3292 63.6C98.4759 63.6 99.4759 63.3333 100.329 62.8C101.183 62.24 101.836 61.5067 102.289 60.6C102.769 59.6933 103.009 58.7067 103.009 57.64C103.009 56.5467 102.769 55.5467 102.289 54.64C101.836 53.7333 101.183 53.0133 100.329 52.48C99.4759 51.92 98.4759 51.64 97.3292 51.64C96.1826 51.64 95.1826 51.92 94.3292 52.48C93.4759 53.0133 92.8092 53.7333 92.3292 54.64C91.8759 55.5467 91.6492 56.5467 91.6492 57.64C91.6492 58.7067 91.8759 59.6933 92.3292 60.6C92.8092 61.5067 93.4759 62.24 94.3292 62.8C95.1826 63.3333 96.1826 63.6 97.3292 63.6ZM117.41 68V40H133.85V45.0401H123.01V51.6H133.65V56.5601H123.01V68H117.41ZM139.534 45.48C138.627 45.48 137.854 45.1734 137.214 44.5601C136.601 43.9201 136.294 43.16 136.294 42.28C136.294 41.4267 136.601 40.6934 137.214 40.0801C137.854 39.4401 138.627 39.12 139.534 39.12C140.467 39.12 141.241 39.4401 141.854 40.0801C142.467 40.6934 142.774 41.4267 142.774 42.28C142.774 43.1867 142.467 43.9468 141.854 44.5601C141.241 45.1734 140.467 45.48 139.534 45.48ZM136.854 68V47.2001H142.254V68H136.854ZM145.448 68V38.8H150.848V68H145.448ZM161.921 68C159.868 68 158.295 67.4934 157.201 66.4801C156.108 65.4668 155.561 63.8268 155.561 61.5601V51.8H152.641V47.2001H155.561V43L160.961 42.44V47.2001H165.361V51.8H160.961V61.28C160.961 62.56 161.521 63.2001 162.641 63.2001H164.881V68H161.921ZM176.58 68.52C174.446 68.52 172.566 68.0268 170.94 67.0401C169.313 66.0534 168.046 64.7467 167.14 63.12C166.26 61.4667 165.82 59.64 165.82 57.64C165.82 55.64 166.286 53.8133 167.22 52.16C168.153 50.48 169.42 49.1467 171.02 48.16C172.646 47.1733 174.5 46.68 176.58 46.68C178.66 46.68 180.486 47.1733 182.06 48.16C183.66 49.1467 184.9 50.48 185.78 52.16C186.686 53.8133 187.14 55.64 187.14 57.64C187.14 57.9333 187.126 58.2401 187.1 58.5601C187.073 58.8801 187.033 59.2134 186.98 59.5601H171.42C171.713 60.7868 172.3 61.7868 173.18 62.5601C174.086 63.3334 175.22 63.7201 176.58 63.7201C177.753 63.7201 178.766 63.4533 179.62 62.92C180.5 62.3867 181.18 61.72 181.66 60.92L185.86 64.0801C185.033 65.3868 183.793 66.4533 182.14 67.28C180.486 68.1067 178.633 68.52 176.58 68.52ZM176.5 51.32C175.22 51.32 174.126 51.7067 173.22 52.48C172.313 53.2533 171.713 54.2668 171.42 55.5201H181.7C181.406 54.3734 180.793 53.3868 179.86 52.5601C178.953 51.7334 177.833 51.32 176.5 51.32ZM189.51 68V47.2001H194.75V51.16C195.097 49.6667 195.803 48.5333 196.87 47.76C197.937 46.96 199.377 46.6134 201.19 46.7201V51.8H200.43C198.883 51.8 197.577 52.2933 196.51 53.28C195.443 54.2667 194.91 55.6268 194.91 57.3601V68H189.51ZM209.599 68.52C206.106 68.52 203.226 67.3067 200.959 64.88L204.599 61.5601C206.119 63.2668 207.746 64.1201 209.479 64.1201C210.412 64.1201 211.119 63.9201 211.599 63.5201C212.106 63.0934 212.359 62.5733 212.359 61.96C212.359 61.5867 212.266 61.2667 212.079 61C211.919 60.7333 211.559 60.4801 210.999 60.2401C210.466 60.0001 209.652 59.7601 208.559 59.5201C206.692 59.0668 205.306 58.5067 204.399 57.84C203.492 57.1733 202.892 56.4267 202.599 55.6C202.306 54.7733 202.159 53.9201 202.159 53.0401C202.159 51.2268 202.839 49.7201 204.199 48.5201C205.586 47.2934 207.492 46.68 209.919 46.68C211.599 46.68 213.039 46.9333 214.239 47.44C215.439 47.9467 216.572 48.8933 217.639 50.28L213.719 53.28C213.212 52.48 212.639 51.9068 211.999 51.5601C211.386 51.2134 210.732 51.0401 210.039 51.0401C209.292 51.0401 208.666 51.1867 208.159 51.48C207.679 51.7733 207.439 52.2401 207.439 52.8801C207.439 53.2268 207.599 53.5733 207.919 53.92C208.239 54.24 209.012 54.5601 210.239 54.8801C212.266 55.3868 213.812 55.9867 214.879 56.68C215.946 57.3467 216.679 58.1067 217.079 58.96C217.479 59.8133 217.679 60.76 217.679 61.8C217.679 63.08 217.319 64.2267 216.599 65.24C215.906 66.2533 214.946 67.0533 213.719 67.64C212.519 68.2267 211.146 68.52 209.599 68.52Z" fill="#1F285B"/>
+      </g>
+      <defs>
+        <filter id="filter0_d_216_1236" x="-11" y="5" width="455" height="106" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dy="4"/>
+          <feGaussianBlur stdDeviation="10"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0.907692 0 0 0 0 0.843596 0 0 0 0 0.774157 0 0 0 1 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_216_1236"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_216_1236" result="shape"/>
+        </filter>
+        <clipPath id="clip0_216_1236">
+          <rect width="440" height="116" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <button id="openEntryPopupBtn" class="layout-overlay-icon" type="button" aria-label="Add entry">
+      <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="34" cy="34" r="34" fill="#4379FF"/>
+        <line x1="33.5997" y1="13.015" x2="33.4007" y2="54.0247" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+        <line x1="54.9838" y1="33.2878" x2="13.9744" y2="33.0256" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button id="spinTriggerBtn" class="wheel-spin-trigger" type="button" aria-label="Spin wheel">
+      <svg width="153" height="74" viewBox="0 0 153 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21.44 58.8C17.0133 58.8 12.9333 57.8667 9.20001 56C5.52001 54.08 2.45335 50.9867 1.22637e-05 46.72L9.68001 40.56C11.12 43.44 12.9333 45.5467 15.12 46.88C17.3067 48.16 19.6267 48.8 22.08 48.8C24.6933 48.8 26.7467 48.2133 28.24 47.04C29.7333 45.8667 30.48 44.32 30.48 42.4C30.48 40.5333 29.8933 39.04 28.72 37.92C27.5467 36.8 25.9733 35.8933 24 35.2C22.08 34.5067 19.9733 33.8667 17.68 33.28C13.36 32.16 9.92001 30.32 7.36001 27.76C4.80001 25.1467 3.52001 21.7333 3.52001 17.52C3.52001 14.16 4.34668 11.2267 6.00001 8.72001C7.65335 6.21334 9.94668 4.26667 12.88 2.88001C15.8667 1.49334 19.3333 0.800009 23.28 0.800009C27.6533 0.800009 31.3067 1.70667 34.24 3.52001C37.1733 5.33334 39.68 7.89334 41.76 11.2L32.16 17.12C30.8267 14.9333 29.44 13.3333 28 12.32C26.56 11.3067 24.8 10.8 22.72 10.8C20.48 10.8 18.6133 11.36 17.12 12.48C15.68 13.6 14.96 15.0933 14.96 16.96C14.96 19.04 15.8133 20.56 17.52 21.52C19.28 22.4267 21.3867 23.2533 23.84 24C25.4933 24.5333 27.3333 25.1733 29.36 25.92C31.44 26.6133 33.44 27.6 35.36 28.88C37.28 30.1067 38.8533 31.76 40.08 33.84C41.3067 35.92 41.92 38.56 41.92 41.76C41.92 45.12 41.0933 48.08 39.44 50.64C37.7867 53.2 35.44 55.2 32.4 56.64C29.36 58.08 25.7067 58.8 21.44 58.8ZM46.8531 73.76V16.16H57.4931V22.88C58.6131 20.5867 60.1865 18.7467 62.2131 17.36C64.2931 15.9733 67.1465 15.28 70.7731 15.28C73.6531 15.28 76.3198 15.8667 78.7731 17.04C81.2798 18.16 83.4665 19.7333 85.3331 21.76C87.1998 23.7333 88.6665 26.0533 89.7331 28.72C90.7998 31.3333 91.3331 34.1333 91.3331 37.12C91.3331 41.12 90.3998 44.7733 88.5331 48.08C86.7198 51.3333 84.2665 53.9467 81.1731 55.92C78.0798 57.84 74.6131 58.8 70.7731 58.8C67.1998 58.8 64.3998 58.16 62.3731 56.88C60.3465 55.5467 58.7731 53.7867 57.6531 51.6V73.76H46.8531ZM69.0131 49.04C71.3065 49.04 73.3065 48.48 75.0131 47.36C76.7731 46.24 78.1331 44.7733 79.0931 42.96C80.0531 41.0933 80.5331 39.12 80.5331 37.04C80.5331 34.8533 80.0531 32.8533 79.0931 31.04C78.1331 29.2267 76.7731 27.7867 75.0131 26.72C73.3065 25.6 71.3065 25.04 69.0131 25.04C66.6665 25.04 64.6131 25.6 62.8531 26.72C61.0931 27.84 59.7331 29.3067 58.7731 31.12C57.8131 32.9333 57.3331 34.9333 57.3331 37.12C57.3331 39.2533 57.8131 41.2267 58.7731 43.04C59.7331 44.8533 61.0931 46.32 62.8531 47.44C64.6131 48.5067 66.6665 49.04 69.0131 49.04ZM101.51 12.72C99.6967 12.72 98.15 12.1067 96.87 10.88C95.6433 9.60001 95.03 8.08001 95.03 6.32001C95.03 4.61334 95.6433 3.14668 96.87 1.92001C98.15 0.640006 99.6967 4.76837e-06 101.51 4.76837e-06C103.377 4.76837e-06 104.923 0.640006 106.15 1.92001C107.377 3.14668 107.99 4.61334 107.99 6.32001C107.99 8.13334 107.377 9.65334 106.15 10.88C104.923 12.1067 103.377 12.72 101.51 12.72ZM96.15 57.76V16.16H106.95V57.76H96.15ZM113.338 57.76V16.16H123.978V22.24C126.164 17.5467 130.404 15.2 136.698 15.2C139.684 15.2 142.378 15.8933 144.778 17.28C147.178 18.6667 149.071 20.64 150.458 23.2C151.844 25.76 152.538 28.8 152.538 32.32V57.76H141.738V34.96C141.738 31.3333 140.911 28.72 139.258 27.12C137.604 25.4667 135.444 24.64 132.778 24.64C130.484 24.64 128.458 25.4667 126.698 27.12C124.991 28.72 124.138 31.3333 124.138 34.96V57.76H113.338Z" fill="#FF3C00"/>
+      </svg>
+    </button>
     <section class="card">
-      <h1 class="title">Wheel of Names (Simplified)</h1>
       <div class="layout">
-        <div class="left-panel">
-          <label for="entries" class="title" style="font-size:1rem;margin-bottom:8px;display:block;">Entries (one per line)</label>
-          <textarea id="entries" placeholder="Alice&#10;Bob&#10;Charlie&#10;Dana"></textarea>
-          <p class="helper">Empty lines are ignored. Add at least 2 entries to spin.</p>
-          <div class="controls">
-            <button id="spinBtn" class="spin-btn" disabled>Spin</button>
-            <button id="clearBtn" class="clear-btn" type="button">Clear</button>
-            <span id="entryCount" class="entry-count">0 valid entries</span>
-          </div>
-        </div>
-
         <div class="right-panel">
           <div class="wheel-wrap">
             <div class="pointer" aria-hidden="true"></div>
@@ -226,7 +491,31 @@
         </div>
       </div>
     </section>
+
+    <a class="section4-back-link" href="index.html" aria-label="Back to home">
+      <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <circle cx="34" cy="34" r="34" fill="#B6C4FF"/>
+        <path d="M52 37C53.6569 37 55 35.6569 55 34C55 32.3431 53.6569 31 52 31V34V37ZM13.8787 31.8787C12.7071 33.0503 12.7071 34.9497 13.8787 36.1213L32.9706 55.2132C34.1421 56.3848 36.0416 56.3848 37.2132 55.2132C38.3848 54.0416 38.3848 52.1421 37.2132 50.9706L20.2426 34L37.2132 17.0294C38.3848 15.8579 38.3848 13.9584 37.2132 12.7868C36.0416 11.6152 34.1421 11.6152 32.9706 12.7868L13.8787 31.8787ZM52 34V31L16 31V34V37L52 37V34Z" fill="#FF3C00"/>
+      </svg>
+    </a>
   </main>
+
+  <div id="entryPopup" class="entry-popup" hidden>
+    <div class="entry-popup__backdrop" data-close-entry-popup></div>
+    <div class="left-panel" role="dialog" aria-modal="true" aria-labelledby="entriesTitle">
+      <div class="left-panel__head">
+        <label id="entriesTitle" for="entryInput" class="title" style="font-size:1rem;margin:0;"></label>
+        <button id="closeEntryPopupBtn" class="left-panel__close" type="button" aria-label="Close">x</button>
+      </div>
+      <input id="entryInput" class="entry-popup__input" type="text" maxlength="60" placeholder="Type one entry name">
+      <div class="entry-popup__actions">
+        <button id="confirmEntryBtn" class="entry-popup__confirm" type="button">Confirm</button>
+        <span id="entryCount" class="entry-count"></span>
+      </div>
+      <div id="entryList" class="entry-list" role="list" aria-label="Wheel entries"></div>
+      <p class="helper"></p>
+    </div>
+  </div>
 
   <div id="winnerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle" hidden>
     <div class="modal__backdrop" data-close-modal></div>
@@ -238,21 +527,17 @@
   </div>
 
   <script>
-    /*
-      How it works:
-      - Parse textarea lines into entries (ignoring empty lines).
-      - Draw one wheel segment per entry on a canvas.
-      - On spin, pick a random winning segment index.
-      - Compute a target wheel rotation so that winner ends under the fixed top pointer.
-      - Animate wheel rotation with easing, then show winner in a popup modal.
-    */
     (function () {
-      const entriesEl = document.getElementById("entries");
-      const spinBtn = document.getElementById("spinBtn");
-      const clearBtn = document.getElementById("clearBtn");
+      const entryInputEl = document.getElementById("entryInput");
+      const confirmEntryBtn = document.getElementById("confirmEntryBtn");
+      const entryListEl = document.getElementById("entryList");
       const entryCount = document.getElementById("entryCount");
       const canvas = document.getElementById("wheelCanvas");
       const ctx = canvas.getContext("2d");
+      const spinTriggerBtn = document.getElementById("spinTriggerBtn");
+      const openEntryPopupBtn = document.getElementById("openEntryPopupBtn");
+      const closeEntryPopupBtn = document.getElementById("closeEntryPopupBtn");
+      const entryPopup = document.getElementById("entryPopup");
 
       const modal = document.getElementById("winnerModal");
       const winnerText = document.getElementById("winnerText");
@@ -264,17 +549,76 @@
       ];
 
       let entries = [];
+      let editingIndex = null;
       let isSpinning = false;
       let currentRotation = 0;
 
-      function parseEntries() {
-        entries = entriesEl.value
-          .split("\n")
-          .map(function (line) { return line.trim(); })
-          .filter(function (line) { return line.length > 0; });
+      function updateEntryCount() {
+        entryCount.textContent = "";
+      }
 
-        entryCount.textContent = entries.length + (entries.length === 1 ? " valid entry" : " valid entries");
-        spinBtn.disabled = entries.length < 2 || isSpinning;
+      function renderEntryList() {
+        entryListEl.innerHTML = "";
+        entries.forEach(function (name, index) {
+          const card = document.createElement("div");
+          card.className = "entry-list__card";
+          card.setAttribute("role", "listitem");
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("data-entry-index", String(index));
+          const nameEl = document.createElement("span");
+          nameEl.className = "entry-list__name";
+          nameEl.textContent = name;
+          const deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "entry-list__delete";
+          deleteBtn.setAttribute("data-entry-delete", "true");
+          deleteBtn.setAttribute("aria-label", "Delete " + name);
+          deleteBtn.textContent = "x";
+          card.appendChild(nameEl);
+          card.appendChild(deleteBtn);
+          entryListEl.appendChild(card);
+        });
+      }
+
+      function syncEntriesView() {
+        updateEntryCount();
+        renderEntryList();
+        drawWheel();
+      }
+
+      function resetEntryEditor() {
+        editingIndex = null;
+        entryInputEl.value = "";
+      }
+
+      function openEntryPopupNew() {
+        resetEntryEditor();
+        entryPopup.hidden = false;
+        entryInputEl.focus();
+      }
+
+      function openEntryPopupEdit(index) {
+        if (index < 0 || index >= entries.length) return;
+        editingIndex = index;
+        entryPopup.hidden = false;
+        entryInputEl.value = entries[index];
+        entryInputEl.focus();
+        entryInputEl.select();
+      }
+
+      function applyEntryInput() {
+        const value = entryInputEl.value.trim();
+        if (editingIndex !== null) {
+          if (!value) {
+            entries.splice(editingIndex, 1);
+          } else {
+            entries[editingIndex] = value;
+          }
+        } else if (value) {
+          entries.push(value);
+        }
+        resetEntryEditor();
+        syncEntriesView();
       }
 
       function drawWheel() {
@@ -351,7 +695,6 @@
         if (entries.length < 2 || isSpinning) return;
 
         isSpinning = true;
-        spinBtn.disabled = true;
 
         const winningIndex = Math.floor(Math.random() * entries.length);
         const n = entries.length;
@@ -388,7 +731,6 @@
           currentRotation = targetRotation;
           drawWheel();
           isSpinning = false;
-          parseEntries();
           showWinner(entries[winningIndex]);
         }
 
@@ -404,18 +746,49 @@
         modal.hidden = true;
       }
 
-      entriesEl.addEventListener("input", function () {
-        parseEntries();
-        drawWheel();
+      function openEntryPopup() {
+        openEntryPopupNew();
+      }
+
+      function closeEntryPopup() {
+        entryPopup.hidden = true;
+        resetEntryEditor();
+      }
+
+      spinTriggerBtn.addEventListener("click", spin);
+      openEntryPopupBtn.addEventListener("click", openEntryPopup);
+      closeEntryPopupBtn.addEventListener("click", closeEntryPopup);
+      entryPopup.querySelector("[data-close-entry-popup]").addEventListener("click", closeEntryPopup);
+      confirmEntryBtn.addEventListener("click", applyEntryInput);
+      entryInputEl.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          applyEntryInput();
+        }
       });
-
-      spinBtn.addEventListener("click", spin);
-
-      clearBtn.addEventListener("click", function () {
-        if (isSpinning) return;
-        entriesEl.value = "";
-        parseEntries();
-        drawWheel();
+      entryListEl.addEventListener("click", function (event) {
+        const card = event.target.closest(".entry-list__card");
+        if (!card || !entryListEl.contains(card)) return;
+        const index = Number(card.getAttribute("data-entry-index"));
+        if (!Number.isInteger(index)) return;
+        const deleteBtn = event.target.closest("[data-entry-delete]");
+        if (deleteBtn) {
+          if (isSpinning) return;
+          entries.splice(index, 1);
+          resetEntryEditor();
+          syncEntriesView();
+          return;
+        }
+        openEntryPopupEdit(index);
+      });
+      entryListEl.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const card = event.target.closest(".entry-list__card");
+        if (!card || !entryListEl.contains(card)) return;
+        const index = Number(card.getAttribute("data-entry-index"));
+        if (!Number.isInteger(index)) return;
+        if (event.key === " ") event.preventDefault();
+        openEntryPopupEdit(index);
       });
 
       closeModalBtn.addEventListener("click", closeModal);
@@ -425,11 +798,13 @@
         if (event.key === "Escape" && !modal.hidden) {
           closeModal();
         }
+        if (event.key === "Escape" && !entryPopup.hidden) {
+          closeEntryPopup();
+        }
       });
 
-      entriesEl.value = "Alice\nBob\nCharlie\nDana\nElliot";
-      parseEntries();
-      drawWheel();
+      entries = ["Alice", "Bob", "Charlie", "Dana", "Elliot"];
+      syncEntriesView();
     })();
   </script>
 </body>

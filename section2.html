@@ -29,13 +29,20 @@
       <section class="s1-top-card section2-calendar" aria-label="Calendar">
         <div class="s1-top-card__top">
           <h2 class="s1-top-card__month">January 2027</h2>
-          <div class="s1-top-card__nav" aria-hidden="true">
-            <span class="s1-top-card__nav-btn s1-top-card__nav-btn--left" role="button" tabindex="0"></span>
-            <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right" role="button" tabindex="0"></span>
-          </div>
+          <button type="button" class="section2-month-plus-btn" aria-label="Calendar action">
+            <svg width="97" height="57" viewBox="0 0 97 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="97" height="57" rx="15" fill="#B6C4FF"/>
+              <line x1="4" y1="-4" x2="33.0101" y2="-4" transform="matrix(-0.00524368 0.999986 -0.99999 -0.00448889 44.0126 10)" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+              <line x1="4" y1="-4" x2="36.0007" y2="-4" transform="matrix(-0.999982 -0.00591654 0.00691137 -0.999976 68 25.343)" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
         <div class="s1-top-card__bar" role="presentation"></div>
         <div class="calendar-grid" id="section2-calendar-grid"></div>
+        <div class="s1-top-card__nav" aria-hidden="true">
+          <span class="s1-top-card__nav-btn s1-top-card__nav-btn--left" role="button" tabindex="0"></span>
+          <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right" role="button" tabindex="0"></span>
+        </div>
       </section>
     </div>
     <svg width="139" height="153" viewBox="0 0 139 153" fill="none" xmlns="http://www.w3.org/2000/svg" class="section2-profile-mark">

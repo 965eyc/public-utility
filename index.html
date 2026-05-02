@@ -155,6 +155,28 @@
           setStatus(signInRes.error.message);
           return;
         }
+        var loginUser = signInRes.data && signInRes.data.user;
+        if (loginUser) {
+          var loginName =
+            (loginUser.user_metadata && loginUser.user_metadata.full_name) ||
+            email.split("@")[0];
+          var loginProfileErr = await supa.from("profiles").upsert(
+            { id: loginUser.id, full_name: loginName },
+            { onConflict: "id" }
+          );
+          if (loginProfileErr.error) {
+            setStatus(loginProfileErr.error.message);
+            return;
+          }
+          var loginStateErr = await supa.from("program_state").upsert(
+            { user_id: loginUser.id, payload: {} },
+            { onConflict: "user_id" }
+          );
+          if (loginStateErr.error) {
+            setStatus(loginStateErr.error.message);
+            return;
+          }
+        }
         window.location.href = "home.html";
       });
 

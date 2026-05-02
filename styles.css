@@ -1258,7 +1258,7 @@ body.page-section7 .shell {
   z-index: 1;
 }
 
-.section7-top-card-art {
+.section7-top-card-wrap {
   position: absolute;
   left: 50%;
   top: 0;
@@ -1266,8 +1266,43 @@ body.page-section7 .shell {
   height: 276px;
   transform: translate(-50%, var(--section7-foreground-shift-y));
   z-index: 3;
-  display: block;
   pointer-events: none;
+}
+
+.section7-top-card-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Schedule owner name — Inter to match section7-profile-art; sits in lower white band of top card. */
+.section7-top-card-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  margin: 0;
+  padding: 0 14px;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1f285b;
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.section7-top-card-name:empty {
+  display: none;
 }
 
 /* Avatar deep-link (?user= other user): smaller person icon (head + torso), shifted up. */

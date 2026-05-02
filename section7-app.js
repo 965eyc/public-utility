@@ -112,6 +112,25 @@
     return activeUserId;
   }
 
+  function loadTopCardName(userId) {
+    const el = document.getElementById("section7-top-card-name");
+    if (!el || !PU || !PU.supabase || !userId) return;
+    PU.supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .maybeSingle()
+      .then(function (pr) {
+        if (pr.error) {
+          console.error("[section7] load profile name", pr.error);
+          el.textContent = "";
+          return;
+        }
+        const raw = pr.data && pr.data.full_name ? String(pr.data.full_name).trim() : "";
+        el.textContent = raw || "Participant";
+      });
+  }
+
   async function persistSchedulesTable() {
     if (!canEdit) return;
     if (!PU || !PU.supabase) return;
@@ -269,6 +288,7 @@
         targetUserId = viewedUserId || currentUserId;
         canEdit = !viewedUserId || viewedUserId === currentUserId;
         applyEditabilityState();
+        loadTopCardName(targetUserId);
         return PU.supabase
           .from("schedules")
           .select("days, times, created_at")

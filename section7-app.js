@@ -15,6 +15,11 @@
 
   if (!triggers.length || !popups.length) return;
 
+  if (viewedUserId && scheduleEditTrigger) {
+    scheduleEditTrigger.style.display = "none";
+    scheduleEditTrigger.setAttribute("aria-hidden", "true");
+  }
+
   const parseScheduleInput = function (raw) {
     const t = raw.trim();
     if (!t) return null;
@@ -147,16 +152,18 @@
   const applyEditabilityState = function () {
     if (!scheduleEditTrigger) return;
     if (canEdit) {
+      scheduleEditTrigger.style.display = "";
       scheduleEditTrigger.style.pointerEvents = "";
-      scheduleEditTrigger.style.opacity = "";
+      scheduleEditTrigger.removeAttribute("aria-hidden");
       scheduleEditTrigger.setAttribute("tabindex", "0");
       scheduleEditTrigger.setAttribute("aria-label", "Add or edit schedule line");
       return;
     }
+    scheduleEditTrigger.style.display = "none";
     scheduleEditTrigger.style.pointerEvents = "none";
-    scheduleEditTrigger.style.opacity = "0.35";
+    scheduleEditTrigger.setAttribute("aria-hidden", "true");
     scheduleEditTrigger.setAttribute("tabindex", "-1");
-    scheduleEditTrigger.setAttribute("aria-label", "Read-only schedule");
+    scheduleEditTrigger.removeAttribute("aria-label");
   };
 
   const closePopup = function (popup) {

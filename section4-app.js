@@ -47,19 +47,22 @@
   ];
 
   function schedulePersistSection4() {
-    if (!PU || typeof PU.setProgramSection !== "function") return;
     clearTimeout(persistTimer);
     persistTimer = setTimeout(function () {
-      PU.setProgramSection("section4", {
-        entries: entries,
-        activeTagFilter: activeTagFilter,
-        currentRotation: currentRotation,
-      }).catch(function (err) {
-        console.error("[section4] persist", err);
-      });
-      persistWheelEntriesTable().catch(function (err) {
-        console.error("[section4] persist wheel_entries table", err);
-      });
+      if (PU && typeof PU.setProgramSection === "function") {
+        PU.setProgramSection("section4", {
+          entries: entries,
+          activeTagFilter: activeTagFilter,
+          currentRotation: currentRotation,
+        }).catch(function (err) {
+          console.error("[section4] persist program_state", err);
+        });
+      }
+      if (PU && PU.supabase) {
+        persistWheelEntriesTable().catch(function (err) {
+          console.error("[section4] persist wheel_entries table", err);
+        });
+      }
     }, 350);
   }
 

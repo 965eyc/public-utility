@@ -1287,10 +1287,11 @@ body.page-section7 .shell {
   padding: 0 14px;
   box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.2;
-  color: #1f285b;
+  /* Matches section 7 shell gradient top stop (#4379FF). */
+  color: #4379ff;
   text-align: center;
   overflow: hidden;
   display: -webkit-box;

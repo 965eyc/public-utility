@@ -36,6 +36,7 @@
   let pendingEntryTag = null;
   let persistTimer = null;
   let activeUserId = null;
+  let activeUser = null;
 
   const DEFAULT_ENTRIES = [
     { id: "a1", name: "Going to Brunch", tag: "circle" },
@@ -70,7 +71,26 @@
     } = await PU.supabase.auth.getSession();
     if (!session || !session.user) return null;
     activeUserId = session.user.id;
+    activeUser = session.user;
     return activeUserId;
+  }
+
+  async function ensureProfileForActiveUser() {
+    if (!PU || !PU.supabase) return null;
+    const userId = await getActiveUserId();
+    if (!userId) return null;
+    const fallbackFromEmail = activeUser && activeUser.email ? activeUser.email.split("@")[0] : "user";
+    const fullName =
+      (activeUser && activeUser.user_metadata && activeUser.user_metadata.full_name) ||
+      fallbackFromEmail;
+    const username =
+      (activeUser && activeUser.user_metadata && activeUser.user_metadata.username) ||
+      fallbackFromEmail;
+    const up = await PU.supabase
+      .from("profiles")
+      .upsert({ id: userId, full_name: fullName, username: username }, { onConflict: "id" });
+    if (up.error) throw up.error;
+    return userId;
   }
 
   function serializeEntries() {
@@ -85,7 +105,7 @@
 
   async function persistWheelEntriesTable() {
     if (!PU || !PU.supabase) return;
-    const userId = await getActiveUserId();
+    const userId = await ensureProfileForActiveUser();
     if (!userId) return;
     const rows = serializeEntries().map(function (row) {
       return {

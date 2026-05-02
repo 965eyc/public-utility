@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Other participants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-community">
+  <div class="shell shell--community">
+    <main class="community">
+      <h1 class="community__title">Other participants</h1>
+      <p class="community__lede">Program data saved by each account (visible to signed-in users per your project rules).</p>
+      <p class="community__status" id="community-status" role="status"></p>
+      <ul class="community__list" id="community-list" aria-label="Participants"></ul>
+      <p class="community__footer">
+        <a href="home.html">Back to home</a>
+      </p>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="project-shared.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="program-state.js"></script>
+  <script src="auth-guard.js"></script>
+  <script>
+    (function () {
+      var listEl = document.getElementById("community-list");
+      var statusEl = document.getElementById("community-status");
+      var PU = window.PublicUtility;
+
+      function setStatus(msg) {
+        statusEl.textContent = msg || "";
+      }
+
+      async function load() {
+        if (!PU || !PU.supabase) {
+          setStatus("Supabase is not configured.");
+          return;
+        }
+        setStatus("Loading…");
+        var res = await PU.supabase
+          .from("program_state")
+          .select("user_id, updated_at, payload")
+          .order("updated_at", { ascending: false });
+        if (res.error) {
+          setStatus(res.error.message);
+          return;
+        }
+        var rows = res.data || [];
+        var ids = rows.map(function (r) {
+          return r.user_id;
+        });
+        var nameById = {};
+        if (ids.length > 0) {
+          var pr = await PU.supabase.from("profiles").select("id, full_name").in("id", ids);
+          if (!pr.error && pr.data) {
+            pr.data.forEach(function (p) {
+              nameById[p.id] = p.full_name || "User";
+            });
+          }
+        }
+        setStatus("");
+        listEl.innerHTML = "";
+        rows.forEach(function (row) {
+          var name = nameById[row.user_id] || "User";
+          var li = document.createElement("li");
+          li.className = "community__item";
+          var title = document.createElement("div");
+          title.className = "community__name";
+          title.textContent = name;
+          var meta = document.createElement("div");
+          meta.className = "community__meta";
+          var keys = row.payload && typeof row.payload === "object" ? Object.keys(row.payload) : [];
+          meta.textContent =
+            keys.length > 0
+              ? "Saved sections: " + keys.join(", ")
+              : "No program data yet";
+          li.appendChild(title);
+          li.appendChild(meta);
+          listEl.appendChild(li);
+        });
+        if (rows.length === 0) {
+          var empty = document.createElement("li");
+          empty.className = "community__item community__item--empty";
+          empty.textContent = "No rows yet.";
+          listEl.appendChild(empty);
+        }
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>

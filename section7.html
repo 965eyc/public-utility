@@ -11,7 +11,7 @@
 </head>
 <body class="page-section7">
   <nav class="sr-only" aria-label="Pages">
-    <a href="index.html">Screen 1</a>
+    <a href="home.html">Screen 1</a>
     <a href="section2.html">Screen 2</a>
     <a href="section3.html">Screen 3</a>
     <a href="section4.html">Screen 4</a>
@@ -119,7 +119,7 @@
       </div>
     </div>
 
-    <a class="section7-bottom-right-link" href="index.html" aria-label="Back to home">
+    <a class="section7-bottom-right-link" href="home.html" aria-label="Back to home">
       <svg class="section7-bottom-right-badge" width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <circle cx="34" cy="34" r="34" fill="#FF3C00"/>
         <path d="M52 37C53.6569 37 55 35.6569 55 34C55 32.3431 53.6569 31 52 31V34V37ZM13.8787 31.8787C12.7071 33.0503 12.7071 34.9497 13.8787 36.1213L32.9706 55.2132C34.1421 56.3848 36.0416 56.3848 37.2132 55.2132C38.3848 54.0416 38.3848 52.1421 37.2132 50.9706L20.2426 34L37.2132 17.0294C38.3848 15.8579 38.3848 13.9584 37.2132 12.7868C36.0416 11.6152 34.1421 11.6152 32.9706 12.7868L13.8787 31.8787ZM52 34V31L16 31V34V37L52 37V34Z" fill="#FFE78F"/>
@@ -174,169 +174,12 @@
       outline-offset: 2px;
     }
   </style>
-  <script>
-    (function () {
-      const triggers = document.querySelectorAll(".section3-popup-trigger[data-popup-target]");
-      const popups = document.querySelectorAll(".section3-popup");
-      const schedulePopup = document.getElementById("section7-schedule-popup");
-      const scheduleInput = document.getElementById("section7-schedule-input");
-      const scheduleCards = document.getElementById("section7-schedule-cards");
-      const confirmBtn = document.getElementById("section7-schedule-confirm");
-      let editingCard = null;
-
-      if (!triggers.length || !popups.length) return;
-
-      const parseScheduleInput = function (raw) {
-        const t = raw.trim();
-        if (!t) return null;
-        const idx = t.indexOf("\n");
-        if (idx === -1) return { days: t, times: "" };
-        return {
-          days: t.slice(0, idx).trim(),
-          times: t.slice(idx + 1).replace(/\n+/g, " ").trim()
-        };
-      };
-
-      const cardTextToInputValue = function (card) {
-        const daysEl = card.querySelector(".section7-schedule-card__days");
-        const timesEl = card.querySelector(".section7-schedule-card__times");
-        const d = daysEl ? daysEl.textContent.trim() : "";
-        const t = timesEl ? timesEl.textContent.trim() : "";
-        if (t) return d + "\n" + t;
-        return d;
-      };
-
-      const updateCardFromParts = function (card, parts) {
-        let daysEl = card.querySelector(".section7-schedule-card__days");
-        let timesEl = card.querySelector(".section7-schedule-card__times");
-        if (!daysEl) {
-          daysEl = document.createElement("div");
-          daysEl.className = "section7-schedule-card__days";
-          card.insertBefore(daysEl, card.firstChild);
-        }
-        daysEl.textContent = parts.days;
-        if (parts.times) {
-          if (!timesEl) {
-            timesEl = document.createElement("div");
-            timesEl.className = "section7-schedule-card__times";
-            card.appendChild(timesEl);
-          }
-          timesEl.textContent = parts.times;
-        } else if (timesEl) {
-          timesEl.remove();
-        }
-      };
-
-      const createCardFromParts = function (parts) {
-        const card = document.createElement("article");
-        card.className = "section7-schedule-card";
-        card.setAttribute("role", "listitem");
-        card.setAttribute("tabindex", "0");
-        updateCardFromParts(card, parts);
-        return card;
-      };
-
-      const openSchedulePopupNew = function () {
-        editingCard = null;
-        schedulePopup.hidden = false;
-        scheduleInput.value = "";
-        scheduleInput.focus();
-      };
-
-      const openSchedulePopupEdit = function (card) {
-        editingCard = card;
-        schedulePopup.hidden = false;
-        scheduleInput.value = cardTextToInputValue(card);
-        scheduleInput.focus();
-        scheduleInput.select();
-      };
-
-      const openPopup = function (popupId) {
-        const popup = document.getElementById(popupId);
-        if (!popup) return;
-        popup.hidden = false;
-        if (popupId === "section7-schedule-popup" && scheduleInput) {
-          openSchedulePopupNew();
-        }
-      };
-
-      const closePopup = function (popup) {
-        if (!popup) return;
-        popup.hidden = true;
-        if (popup === schedulePopup) {
-          editingCard = null;
-          if (scheduleInput) scheduleInput.value = "";
-        }
-      };
-
-      triggers.forEach(function (trigger) {
-        const targetId = trigger.getAttribute("data-popup-target");
-        if (!targetId) return;
-
-        trigger.addEventListener("click", function () {
-          openPopup(targetId);
-        });
-
-        trigger.addEventListener("keydown", function (event) {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            openPopup(targetId);
-          }
-        });
-      });
-
-      popups.forEach(function (popup) {
-        const closeTargets = popup.querySelectorAll("[data-popup-close]");
-        closeTargets.forEach(function (target) {
-          target.addEventListener("click", function () {
-            closePopup(popup);
-          });
-        });
-      });
-
-      if (confirmBtn && schedulePopup && scheduleInput && scheduleCards) {
-        confirmBtn.addEventListener("click", function () {
-          const parts = parseScheduleInput(scheduleInput.value);
-          const target = editingCard;
-          if (target) {
-            if (!parts) {
-              target.remove();
-            } else {
-              updateCardFromParts(target, parts);
-            }
-          } else if (parts) {
-            scheduleCards.appendChild(createCardFromParts(parts));
-          }
-          closePopup(schedulePopup);
-        });
-      }
-
-      if (scheduleCards && schedulePopup) {
-        scheduleCards.addEventListener("click", function (event) {
-          const card = event.target.closest(".section7-schedule-card");
-          if (!card || !scheduleCards.contains(card)) return;
-          openSchedulePopupEdit(card);
-        });
-
-        scheduleCards.addEventListener("keydown", function (event) {
-          if (event.key !== "Enter" && event.key !== " ") return;
-          const card = event.target.closest(".section7-schedule-card");
-          if (!card || !scheduleCards.contains(card)) return;
-          if (event.key === " ") event.preventDefault();
-          openSchedulePopupEdit(card);
-        });
-      }
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key !== "Escape") return;
-        popups.forEach(function (popup) {
-          if (!popup.hidden) {
-            closePopup(popup);
-          }
-        });
-      });
-    })();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="project-shared.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="program-state.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="section7-app.js"></script>
 </body>
 </html>

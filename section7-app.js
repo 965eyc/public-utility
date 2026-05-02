@@ -1,0 +1,201 @@
+(function () {
+  const PU = window.PublicUtility;
+  const triggers = document.querySelectorAll(".section3-popup-trigger[data-popup-target]");
+  const popups = document.querySelectorAll(".section3-popup");
+  const schedulePopup = document.getElementById("section7-schedule-popup");
+  const scheduleInput = document.getElementById("section7-schedule-input");
+  const scheduleCards = document.getElementById("section7-schedule-cards");
+  const confirmBtn = document.getElementById("section7-schedule-confirm");
+  let editingCard = null;
+
+  if (!triggers.length || !popups.length) return;
+
+  const parseScheduleInput = function (raw) {
+    const t = raw.trim();
+    if (!t) return null;
+    const idx = t.indexOf("\n");
+    if (idx === -1) return { days: t, times: "" };
+    return {
+      days: t.slice(0, idx).trim(),
+      times: t.slice(idx + 1).replace(/\n+/g, " ").trim(),
+    };
+  };
+
+  const cardTextToInputValue = function (card) {
+    const daysEl = card.querySelector(".section7-schedule-card__days");
+    const timesEl = card.querySelector(".section7-schedule-card__times");
+    const d = daysEl ? daysEl.textContent.trim() : "";
+    const t = timesEl ? timesEl.textContent.trim() : "";
+    if (t) return d + "\n" + t;
+    return d;
+  };
+
+  const updateCardFromParts = function (card, parts) {
+    let daysEl = card.querySelector(".section7-schedule-card__days");
+    let timesEl = card.querySelector(".section7-schedule-card__times");
+    if (!daysEl) {
+      daysEl = document.createElement("div");
+      daysEl.className = "section7-schedule-card__days";
+      card.insertBefore(daysEl, card.firstChild);
+    }
+    daysEl.textContent = parts.days;
+    if (parts.times) {
+      if (!timesEl) {
+        timesEl = document.createElement("div");
+        timesEl.className = "section7-schedule-card__times";
+        card.appendChild(timesEl);
+      }
+      timesEl.textContent = parts.times;
+    } else if (timesEl) {
+      timesEl.remove();
+    }
+  };
+
+  const createCardFromParts = function (parts) {
+    const card = document.createElement("article");
+    card.className = "section7-schedule-card";
+    card.setAttribute("role", "listitem");
+    card.setAttribute("tabindex", "0");
+    updateCardFromParts(card, parts);
+    return card;
+  };
+
+  function serializeScheduleCards() {
+    return Array.from(scheduleCards.querySelectorAll(".section7-schedule-card")).map(function (card) {
+      const daysEl = card.querySelector(".section7-schedule-card__days");
+      const timesEl = card.querySelector(".section7-schedule-card__times");
+      return {
+        days: daysEl ? daysEl.textContent.trim() : "",
+        times: timesEl ? timesEl.textContent.trim() : "",
+      };
+    });
+  }
+
+  function persistSection7() {
+    if (!PU || typeof PU.setProgramSection !== "function") return;
+    PU.setProgramSection("section7", { cards: serializeScheduleCards() }).catch(function (err) {
+      console.error("[section7] persist", err);
+    });
+  }
+
+  const openSchedulePopupNew = function () {
+    editingCard = null;
+    schedulePopup.hidden = false;
+    scheduleInput.value = "";
+    scheduleInput.focus();
+  };
+
+  const openSchedulePopupEdit = function (card) {
+    editingCard = card;
+    schedulePopup.hidden = false;
+    scheduleInput.value = cardTextToInputValue(card);
+    scheduleInput.focus();
+    scheduleInput.select();
+  };
+
+  const openPopup = function (popupId) {
+    const popup = document.getElementById(popupId);
+    if (!popup) return;
+    popup.hidden = false;
+    if (popupId === "section7-schedule-popup" && scheduleInput) {
+      openSchedulePopupNew();
+    }
+  };
+
+  const closePopup = function (popup) {
+    if (!popup) return;
+    popup.hidden = true;
+    if (popup === schedulePopup) {
+      editingCard = null;
+      if (scheduleInput) scheduleInput.value = "";
+    }
+  };
+
+  triggers.forEach(function (trigger) {
+    const targetId = trigger.getAttribute("data-popup-target");
+    if (!targetId) return;
+
+    trigger.addEventListener("click", function () {
+      openPopup(targetId);
+    });
+
+    trigger.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPopup(targetId);
+      }
+    });
+  });
+
+  popups.forEach(function (popup) {
+    const closeTargets = popup.querySelectorAll("[data-popup-close]");
+    closeTargets.forEach(function (target) {
+      target.addEventListener("click", function () {
+        closePopup(popup);
+      });
+    });
+  });
+
+  if (confirmBtn && schedulePopup && scheduleInput && scheduleCards) {
+    confirmBtn.addEventListener("click", function () {
+      const parts = parseScheduleInput(scheduleInput.value);
+      const target = editingCard;
+      if (target) {
+        if (!parts) {
+          target.remove();
+        } else {
+          updateCardFromParts(target, parts);
+        }
+      } else if (parts) {
+        scheduleCards.appendChild(createCardFromParts(parts));
+      }
+      closePopup(schedulePopup);
+      persistSection7();
+    });
+  }
+
+  if (scheduleCards && schedulePopup) {
+    scheduleCards.addEventListener("click", function (event) {
+      const card = event.target.closest(".section7-schedule-card");
+      if (!card || !scheduleCards.contains(card)) return;
+      openSchedulePopupEdit(card);
+    });
+
+    scheduleCards.addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const card = event.target.closest(".section7-schedule-card");
+      if (!card || !scheduleCards.contains(card)) return;
+      if (event.key === " ") event.preventDefault();
+      openSchedulePopupEdit(card);
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    popups.forEach(function (popup) {
+      if (!popup.hidden) {
+        closePopup(popup);
+      }
+    });
+  });
+
+  function hydrateSection7() {
+    if (!PU || typeof PU.ensureProgramPayload !== "function") return;
+    PU.ensureProgramPayload()
+      .then(function () {
+        const s7 = PU.programPayload.section7;
+        if (s7 && Array.isArray(s7.cards)) {
+          s7.cards.forEach(function (parts) {
+            if (parts && (parts.days || parts.times)) {
+              scheduleCards.appendChild(createCardFromParts(parts));
+            }
+          });
+        }
+      })
+      .catch(function (err) {
+        console.error("[section7] hydrate", err);
+      });
+  }
+
+  hydrateSection7();
+})();

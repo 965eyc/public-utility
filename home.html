@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-index">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="project-shared.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="program-state.js"></script>
+  <script src="auth-guard.js"></script>
+  <div class="shell">
+    <div class="app">
+      <main class="app__main">
+        <section class="s1-top-card" aria-label="Calendar">
+          <div class="s1-top-card__top">
+            <h2 class="s1-top-card__month">January</h2>
+            <div class="s1-top-card__nav" aria-hidden="true">
+              <span class="s1-top-card__nav-btn s1-top-card__nav-btn--left"></span>
+              <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right"></span>
+            </div>
+          </div>
+          <div class="s1-top-card__bar" role="presentation"></div>
+          <div class="calendar-grid">
+            <div class="calendar-grid__cell" data-day="1"></div><div class="calendar-grid__cell" data-day="2"></div><div class="calendar-grid__cell" data-day="3"></div><div class="calendar-grid__cell" data-day="4"></div><div class="calendar-grid__cell" data-day="5"></div><div class="calendar-grid__cell" data-day="6"></div><div class="calendar-grid__cell" data-day="7"></div>
+            <div class="calendar-grid__cell" data-day="8"></div><div class="calendar-grid__cell" data-day="9"></div><div class="calendar-grid__cell" data-day="10"></div><div class="calendar-grid__cell" data-day="11"></div><div class="calendar-grid__cell" data-day="12"></div><div class="calendar-grid__cell" data-day="13"></div><div class="calendar-grid__cell" data-day="14"></div>
+            <div class="calendar-grid__cell" data-day="15"></div><div class="calendar-grid__cell" data-day="16"></div><div class="calendar-grid__cell" data-day="17"></div><div class="calendar-grid__cell" data-day="18"></div><div class="calendar-grid__cell" data-day="19"></div><div class="calendar-grid__cell" data-day="20"></div><div class="calendar-grid__cell" data-day="21"></div>
+            <div class="calendar-grid__cell" data-day="22"></div><div class="calendar-grid__cell" data-day="23"></div><div class="calendar-grid__cell" data-day="24"></div><div class="calendar-grid__cell" data-day="25"></div><div class="calendar-grid__cell" data-day="26"></div><div class="calendar-grid__cell" data-day="27"></div><div class="calendar-grid__cell" data-day="28"></div>
+            <a href="section3.html" class="calendar-grid__cell calendar-grid__cell--mark" data-day="29" aria-label="View event" title="Event"></a><div class="calendar-grid__cell" data-day="30"></div><div class="calendar-grid__cell" data-day="31"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div><div class="calendar-grid__cell"></div>
+          </div>
+        </section>
+
+        <section class="stack-cards" aria-label="Stacked cards">
+          <div class="figma-stack" role="presentation">
+            <img src="assets/stacked-cards-group.svg" alt="" class="figma-stack__full">
+            <a href="section5.html" class="figma-stack__blue-link" title="Section 5" aria-label="Open section 5"></a>
+            <a href="section6.html" class="figma-stack__yellow-link" title="Section 6" aria-label="Open section 6"></a>
+            <a href="section2.html" class="figma-stack__red-link" title="Group" aria-label="Open group"></a>
+          </div>
+        </section>
+        <p class="home-community-link"><a href="community.html">Other participants</a></p>
+      </main>
+    </div>
+
+    <nav class="shell-corner-nav" aria-label="Primary">
+      <a href="section4.html" class="shell-corner-nav__cluster shell-corner-nav__cluster--left" data-node-id="85:1193" data-figma="https://www.figma.com/design/Lj4VJ8UaEBgzxKAOH9af6c/Untitled?node-id=85-1193&amp;m=dev" aria-label="Go to section 4">
+        <svg width="60" height="51" viewBox="0 0 60 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 35C60 48.8071 43.0685 51 26.5 51C9.93146 51 0 36.8071 0 23C0 9.19288 9.93146 0 26.5 0C43.0685 0 60 21.1929 60 35Z" fill="white"/>
+          <circle cx="8.5" cy="8.5" r="7" transform="matrix(-1 0 0 1 38 10)" stroke="#B6C4FF" stroke-width="3"/>
+          <path d="M21.5 16.5C17.7136 16.5 14.5 19.7759 14.5 24C14.5 28.2241 17.7136 31.5 21.5 31.5C25.2864 31.5 28.5 28.2241 28.5 24C28.5 19.7759 25.2864 16.5 21.5 16.5Z" stroke="#B6C4FF" stroke-width="3"/>
+          <circle cx="8.5" cy="8.5" r="7" transform="matrix(-1 0 0 1 48 15)" stroke="#B6C4FF" stroke-width="3"/>
+          <path d="M22.5 26.5C18.7136 26.5 15.5 29.7759 15.5 34C15.5 38.2241 18.7136 41.5 22.5 41.5C26.2864 41.5 29.5 38.2241 29.5 34C29.5 29.7759 26.2864 26.5 22.5 26.5Z" stroke="#B6C4FF" stroke-width="3"/>
+          <path d="M36.5 26.5C32.7136 26.5 29.5 29.7759 29.5 34C29.5 38.2241 32.7136 41.5 36.5 41.5C40.2864 41.5 43.5 38.2241 43.5 34C43.5 29.7759 40.2864 26.5 36.5 26.5Z" stroke="#B6C4FF" stroke-width="3"/>
+        </svg>
+      </a>
+      <a href="section7.html" class="shell-corner-nav__cluster shell-corner-nav__cluster--right" data-node-id="85:1194" data-figma="https://www.figma.com/design/Lj4VJ8UaEBgzxKAOH9af6c/Untitled?node-id=85-1194&amp;m=dev" aria-label="Go to section 7">
+        <svg width="60" height="51" viewBox="0 0 60 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 35C60 48.8071 43.0685 51 26.5 51C9.93146 51 0 36.8071 0 23C0 9.19288 9.93146 0 26.5 0C43.0685 0 60 21.1929 60 35Z" fill="white"></path>
+          <path d="M43 36.5C43 32.3579 39.6421 29 35.5 29H24.5C20.3579 29 17 32.3579 17 36.5V43C17 43.5523 17.4477 44 18 44H42C42.5523 44 43 43.5523 43 43V36.5Z" fill="#B6C4FF"></path>
+          <path d="M21 19.5C21 24.1944 24.8056 26.5 29.5 26.5C34.1944 26.5 38 24.1944 38 19.5C38 14.8056 34.1944 11 29.5 11C24.8056 11 21 14.8056 21 19.5Z" fill="#B6C4FF"></path>
+        </svg>
+      </a>
+    </nav>
+  </div>
+  <script>
+    (function () {
+      var months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      function stepMonth(delta) {
+        var el = document.querySelector(".s1-top-card__month");
+        if (!el) return;
+        var i = months.indexOf(el.textContent.trim());
+        if (i === -1) i = 0;
+        el.textContent = months[(i + delta + 12) % 12];
+      }
+      document.querySelector(".s1-top-card__nav-btn--left")?.addEventListener("click", function () {
+        stepMonth(-1);
+      });
+      document.querySelector(".s1-top-card__nav-btn--right")?.addEventListener("click", function () {
+        stepMonth(1);
+      });
+    })();
+  </script>
+</body>
+</html>

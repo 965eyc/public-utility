@@ -1306,6 +1306,22 @@ body.page-section7 .shell {
   display: none;
 }
 
+/*
+ * Group-tab avatar deep-links: name tracks "Schedule" path in .section7-profile-art
+ * (cap height ~36 user units in a 449-unit-wide viewBox). A few px smaller than that cap height.
+ * 100cqw = .shell width so it stays in sync with .section7-profile-stack (min(449px, 100%)).
+ */
+body.page-section7.section7-from-avatar .shell {
+  container-type: inline-size;
+  container-name: section7-shell;
+}
+
+body.page-section7.section7-from-avatar .section7-top-card-name {
+  font-size: clamp(1.25rem, calc(36 / 449 * min(449px, 100cqw) - 4px), 2.125rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
 /* Avatar deep-link (?user= other user): smaller person icon (head + torso), shifted up. */
 body.page-section7.section7-from-avatar .section7-top-card-art #section7-top-card-avatar-figure {
   transform: translate(0, -18px) scale(0.82);

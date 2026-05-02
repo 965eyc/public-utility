@@ -27,6 +27,16 @@ create table if not exists public.schedules (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.wheel_entries (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  entry_name text not null,
+  entry_tag text,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Backfill columns if program_state already existed before this schema.
 alter table public.program_state add column if not exists payload jsonb not null default '{}'::jsonb;
 alter table public.program_state add column if not exists updated_at timestamptz not null default now();
@@ -34,14 +44,21 @@ alter table public.schedules add column if not exists days text;
 alter table public.schedules add column if not exists times text;
 alter table public.schedules add column if not exists created_at timestamptz not null default now();
 alter table public.schedules add column if not exists updated_at timestamptz not null default now();
+alter table public.wheel_entries add column if not exists entry_name text;
+alter table public.wheel_entries add column if not exists entry_tag text;
+alter table public.wheel_entries add column if not exists sort_order integer not null default 0;
+alter table public.wheel_entries add column if not exists created_at timestamptz not null default now();
+alter table public.wheel_entries add column if not exists updated_at timestamptz not null default now();
 
 create index if not exists program_state_updated_at_idx on public.program_state (updated_at desc);
 create index if not exists schedules_user_id_idx on public.schedules (user_id, created_at desc);
+create index if not exists wheel_entries_user_id_idx on public.wheel_entries (user_id, sort_order, created_at);
 
 -- RLS
 alter table public.profiles enable row level security;
 alter table public.program_state enable row level security;
 alter table public.schedules enable row level security;
+alter table public.wheel_entries enable row level security;
 
 -- profiles: any signed-in user can read; only owner can insert/update
 drop policy if exists "profiles_select_authenticated" on public.profiles;
@@ -112,5 +129,31 @@ create policy "schedules_update_own"
 drop policy if exists "schedules_delete_own" on public.schedules;
 create policy "schedules_delete_own"
   on public.schedules for delete
+  to authenticated
+  using (auth.uid() = user_id);
+
+-- wheel_entries: any signed-in user can read; only owner can write
+drop policy if exists "wheel_entries_select_authenticated" on public.wheel_entries;
+create policy "wheel_entries_select_authenticated"
+  on public.wheel_entries for select
+  to authenticated
+  using (true);
+
+drop policy if exists "wheel_entries_insert_own" on public.wheel_entries;
+create policy "wheel_entries_insert_own"
+  on public.wheel_entries for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists "wheel_entries_update_own" on public.wheel_entries;
+create policy "wheel_entries_update_own"
+  on public.wheel_entries for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "wheel_entries_delete_own" on public.wheel_entries;
+create policy "wheel_entries_delete_own"
+  on public.wheel_entries for delete
   to authenticated
   using (auth.uid() = user_id);

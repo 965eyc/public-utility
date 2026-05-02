@@ -35,6 +35,7 @@
   let activeTagFilter = null;
   let pendingEntryTag = null;
   let persistTimer = null;
+  let activeUserId = null;
 
   const DEFAULT_ENTRIES = [
     { id: "a1", name: "Going to Brunch", tag: "circle" },
@@ -55,7 +56,50 @@
       }).catch(function (err) {
         console.error("[section4] persist", err);
       });
+      persistWheelEntriesTable().catch(function (err) {
+        console.error("[section4] persist wheel_entries table", err);
+      });
     }, 350);
+  }
+
+  async function getActiveUserId() {
+    if (activeUserId) return activeUserId;
+    if (!PU || !PU.supabase) return null;
+    const {
+      data: { session },
+    } = await PU.supabase.auth.getSession();
+    if (!session || !session.user) return null;
+    activeUserId = session.user.id;
+    return activeUserId;
+  }
+
+  function serializeEntries() {
+    return entries.map(function (entry, index) {
+      return {
+        entry_name: entry.name || "",
+        entry_tag: entry.tag || null,
+        sort_order: index,
+      };
+    });
+  }
+
+  async function persistWheelEntriesTable() {
+    if (!PU || !PU.supabase) return;
+    const userId = await getActiveUserId();
+    if (!userId) return;
+    const rows = serializeEntries().map(function (row) {
+      return {
+        user_id: userId,
+        entry_name: row.entry_name,
+        entry_tag: row.entry_tag,
+        sort_order: row.sort_order,
+      };
+    });
+    const del = await PU.supabase.from("wheel_entries").delete().eq("user_id", userId);
+    if (del.error) throw del.error;
+    if (!rows.length) return;
+    const ins = await PU.supabase.from("wheel_entries").insert(rows);
+    if (ins.error) throw ins.error;
   }
 
   function getVisibleEntries() {
@@ -392,22 +436,51 @@
   });
 
   function hydrateFromServer() {
-    if (!PU || typeof PU.ensureProgramPayload !== "function") {
+    if (!PU || !PU.supabase) {
       entries = DEFAULT_ENTRIES.slice();
       syncEntriesView();
       return;
     }
-    PU.ensureProgramPayload()
-      .then(function () {
-        const s4 = PU.programPayload.section4;
-        if (s4 && Array.isArray(s4.entries) && s4.entries.length) {
-          entries = s4.entries;
-          if (typeof s4.activeTagFilter !== "undefined") activeTagFilter = s4.activeTagFilter;
-          if (typeof s4.currentRotation === "number") currentRotation = s4.currentRotation;
-        } else {
-          entries = DEFAULT_ENTRIES.slice();
+    getActiveUserId()
+      .then(function (userId) {
+        if (!userId) return [];
+        return PU.supabase
+          .from("wheel_entries")
+          .select("id, entry_name, entry_tag, sort_order")
+          .eq("user_id", userId)
+          .order("sort_order", { ascending: true });
+      })
+      .then(function (res) {
+        if (res && res.error) {
+          console.error("[section4] load wheel_entries table", res.error);
         }
-        syncEntriesView();
+        if (res && res.data && res.data.length) {
+          entries = res.data.map(function (row, index) {
+            return {
+              id: "db-" + String(row.id || index),
+              name: row.entry_name || "",
+              tag: row.entry_tag || null,
+            };
+          });
+          syncEntriesView();
+          return;
+        }
+        if (!PU || typeof PU.ensureProgramPayload !== "function") {
+          entries = DEFAULT_ENTRIES.slice();
+          syncEntriesView();
+          return;
+        }
+        return PU.ensureProgramPayload().then(function () {
+          const s4 = PU.programPayload.section4;
+          if (s4 && Array.isArray(s4.entries) && s4.entries.length) {
+            entries = s4.entries;
+            if (typeof s4.activeTagFilter !== "undefined") activeTagFilter = s4.activeTagFilter;
+            if (typeof s4.currentRotation === "number") currentRotation = s4.currentRotation;
+          } else {
+            entries = DEFAULT_ENTRIES.slice();
+          }
+          syncEntriesView();
+        });
       })
       .catch(function () {
         entries = DEFAULT_ENTRIES.slice();

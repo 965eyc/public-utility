@@ -7,6 +7,8 @@
   const scheduleCards = document.getElementById("section7-schedule-cards");
   const confirmBtn = document.getElementById("section7-schedule-confirm");
   const scheduleEditTrigger = document.getElementById("section7-schedule-edit-trigger");
+  const schedulePlusLineV = document.getElementById("section7-schedule-plus-v");
+  const schedulePlusLineH = document.getElementById("section7-schedule-plus-h");
   const viewedUserId = new URLSearchParams(window.location.search).get("user");
   let editingCard = null;
   let activeUserId = null;
@@ -15,9 +17,15 @@
 
   if (!triggers.length || !popups.length) return;
 
-  if (viewedUserId && scheduleEditTrigger) {
-    scheduleEditTrigger.style.display = "none";
-    scheduleEditTrigger.setAttribute("aria-hidden", "true");
+  if (viewedUserId) {
+    if (scheduleEditTrigger) {
+      scheduleEditTrigger.style.display = "none";
+      scheduleEditTrigger.setAttribute("aria-hidden", "true");
+    }
+    [schedulePlusLineV, schedulePlusLineH].forEach(function (line) {
+      if (!line) return;
+      line.style.display = "none";
+    });
   }
 
   const parseScheduleInput = function (raw) {
@@ -150,20 +158,25 @@
   };
 
   const applyEditabilityState = function () {
-    if (!scheduleEditTrigger) return;
-    if (canEdit) {
-      scheduleEditTrigger.style.display = "";
-      scheduleEditTrigger.style.pointerEvents = "";
-      scheduleEditTrigger.removeAttribute("aria-hidden");
-      scheduleEditTrigger.setAttribute("tabindex", "0");
-      scheduleEditTrigger.setAttribute("aria-label", "Add or edit schedule line");
-      return;
+    if (scheduleEditTrigger) {
+      if (canEdit) {
+        scheduleEditTrigger.style.display = "";
+        scheduleEditTrigger.style.pointerEvents = "";
+        scheduleEditTrigger.removeAttribute("aria-hidden");
+        scheduleEditTrigger.setAttribute("tabindex", "0");
+        scheduleEditTrigger.setAttribute("aria-label", "Add or edit schedule line");
+      } else {
+        scheduleEditTrigger.style.display = "none";
+        scheduleEditTrigger.style.pointerEvents = "none";
+        scheduleEditTrigger.setAttribute("aria-hidden", "true");
+        scheduleEditTrigger.setAttribute("tabindex", "-1");
+        scheduleEditTrigger.removeAttribute("aria-label");
+      }
     }
-    scheduleEditTrigger.style.display = "none";
-    scheduleEditTrigger.style.pointerEvents = "none";
-    scheduleEditTrigger.setAttribute("aria-hidden", "true");
-    scheduleEditTrigger.setAttribute("tabindex", "-1");
-    scheduleEditTrigger.removeAttribute("aria-label");
+    [schedulePlusLineV, schedulePlusLineH].forEach(function (line) {
+      if (!line) return;
+      line.style.display = canEdit ? "" : "none";
+    });
   };
 
   const closePopup = function (popup) {

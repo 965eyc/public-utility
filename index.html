@@ -29,8 +29,8 @@
           <input class="signup__input" type="password" name="password" id="auth-password" autocomplete="new-password" required minlength="8">
         </label>
         <label class="signup__label signup-only">
-          <span class="signup__label-text">Confirm password</span>
-          <input class="signup__input" type="password" name="password_confirm" id="auth-password-confirm" autocomplete="new-password" minlength="8">
+          <span class="signup__label-text">Username</span>
+          <input class="signup__input" type="text" name="username" id="auth-username" autocomplete="username" minlength="3">
         </label>
         <button type="submit" class="signup__submit" id="auth-submit">Create account</button>
       </form>
@@ -55,7 +55,7 @@
       var nameInput = document.getElementById("auth-name");
       var emailInput = document.getElementById("auth-email");
       var passInput = document.getElementById("auth-password");
-      var passConfirm = document.getElementById("auth-password-confirm");
+      var usernameInput = document.getElementById("auth-username");
       var isLogin = false;
 
       function setStatus(msg) {
@@ -70,10 +70,10 @@
           ? "Need an account? Sign up"
           : "Already have an account? Sign in";
         nameInput.required = !isLogin;
-        passConfirm.required = !isLogin;
+        usernameInput.required = !isLogin;
         passInput.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
         if (isLogin) {
-          passConfirm.removeAttribute("required");
+          usernameInput.removeAttribute("required");
         }
         setStatus("");
       }
@@ -103,19 +103,20 @@
         }
         if (!isLogin) {
           var fullName = nameInput.value.trim();
+          var username = usernameInput.value.trim();
           if (!fullName) {
             setStatus("Please enter your name.");
             return;
           }
-          if (password !== passConfirm.value) {
-            setStatus("Passwords do not match.");
+          if (!username || username.length < 3) {
+            setStatus("Please enter a username with at least 3 characters.");
             return;
           }
           submitBtn.disabled = true;
           var signUpRes = await supa.auth.signUp({
             email: email,
             password: password,
-            options: { data: { full_name: fullName } },
+            options: { data: { full_name: fullName, username: username } },
           });
           submitBtn.disabled = false;
           if (signUpRes.error) {
@@ -130,7 +131,7 @@
           }
           var user = signUpRes.data.user;
           var profileErr = await supa.from("profiles").upsert(
-            { id: user.id, full_name: fullName },
+            { id: user.id, full_name: fullName, username: username },
             { onConflict: "id" }
           );
           if (profileErr.error) {
@@ -157,11 +158,14 @@
         }
         var loginUser = signInRes.data && signInRes.data.user;
         if (loginUser) {
+          var loginUsername =
+            (loginUser.user_metadata && loginUser.user_metadata.username) ||
+            email.split("@")[0];
           var loginName =
             (loginUser.user_metadata && loginUser.user_metadata.full_name) ||
             email.split("@")[0];
           var loginProfileErr = await supa.from("profiles").upsert(
-            { id: loginUser.id, full_name: loginName },
+            { id: loginUser.id, full_name: loginName, username: loginUsername },
             { onConflict: "id" }
           );
           if (loginProfileErr.error) {

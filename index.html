@@ -83,15 +83,6 @@
         applyMode();
       });
 
-      async function redirectIfSession() {
-        var supa = window.PublicUtility && window.PublicUtility.supabase;
-        if (!supa) return;
-        var res = await supa.auth.getSession();
-        if (res.data && res.data.session) {
-          window.location.replace("home.html");
-        }
-      }
-
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
         setStatus("");
@@ -168,7 +159,6 @@
       });
 
       applyMode();
-      redirectIfSession();
     })();
   </script>
 </body>

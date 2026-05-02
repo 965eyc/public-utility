@@ -8,11 +8,19 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
+-- Backfill columns if profiles already existed before this schema.
+alter table public.profiles add column if not exists full_name text;
+alter table public.profiles add column if not exists created_at timestamptz not null default now();
+
 create table if not exists public.program_state (
   user_id uuid primary key references public.profiles (id) on delete cascade,
   payload jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
+
+-- Backfill columns if program_state already existed before this schema.
+alter table public.program_state add column if not exists payload jsonb not null default '{}'::jsonb;
+alter table public.program_state add column if not exists updated_at timestamptz not null default now();
 
 create index if not exists program_state_updated_at_idx on public.program_state (updated_at desc);
 

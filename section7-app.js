@@ -6,8 +6,12 @@
   const scheduleInput = document.getElementById("section7-schedule-input");
   const scheduleCards = document.getElementById("section7-schedule-cards");
   const confirmBtn = document.getElementById("section7-schedule-confirm");
+  const scheduleEditTrigger = document.getElementById("section7-schedule-edit-trigger");
+  const viewedUserId = new URLSearchParams(window.location.search).get("user");
   let editingCard = null;
   let activeUserId = null;
+  let targetUserId = null;
+  let canEdit = true;
 
   if (!triggers.length || !popups.length) return;
 
@@ -73,6 +77,7 @@
   }
 
   function persistSection7() {
+    if (!canEdit) return;
     if (!PU || typeof PU.setProgramSection !== "function") return;
     PU.setProgramSection("section7", { cards: serializeScheduleCards() }).catch(function (err) {
       console.error("[section7] persist", err);
@@ -94,6 +99,7 @@
   }
 
   async function persistSchedulesTable() {
+    if (!canEdit) return;
     if (!PU || !PU.supabase) return;
     const userId = await getActiveUserId();
     if (!userId) return;
@@ -112,6 +118,7 @@
   }
 
   const openSchedulePopupNew = function () {
+    if (!canEdit) return;
     editingCard = null;
     schedulePopup.hidden = false;
     scheduleInput.value = "";
@@ -119,6 +126,7 @@
   };
 
   const openSchedulePopupEdit = function (card) {
+    if (!canEdit) return;
     editingCard = card;
     schedulePopup.hidden = false;
     scheduleInput.value = cardTextToInputValue(card);
@@ -127,12 +135,28 @@
   };
 
   const openPopup = function (popupId) {
+    if (!canEdit) return;
     const popup = document.getElementById(popupId);
     if (!popup) return;
     popup.hidden = false;
     if (popupId === "section7-schedule-popup" && scheduleInput) {
       openSchedulePopupNew();
     }
+  };
+
+  const applyEditabilityState = function () {
+    if (!scheduleEditTrigger) return;
+    if (canEdit) {
+      scheduleEditTrigger.style.pointerEvents = "";
+      scheduleEditTrigger.style.opacity = "";
+      scheduleEditTrigger.setAttribute("tabindex", "0");
+      scheduleEditTrigger.setAttribute("aria-label", "Add or edit schedule line");
+      return;
+    }
+    scheduleEditTrigger.style.pointerEvents = "none";
+    scheduleEditTrigger.style.opacity = "0.35";
+    scheduleEditTrigger.setAttribute("tabindex", "-1");
+    scheduleEditTrigger.setAttribute("aria-label", "Read-only schedule");
   };
 
   const closePopup = function (popup) {
@@ -171,6 +195,7 @@
 
   if (confirmBtn && schedulePopup && scheduleInput && scheduleCards) {
     confirmBtn.addEventListener("click", function () {
+      if (!canEdit) return;
       const parts = parseScheduleInput(scheduleInput.value);
       const target = editingCard;
       if (target) {
@@ -189,12 +214,14 @@
 
   if (scheduleCards && schedulePopup) {
     scheduleCards.addEventListener("click", function (event) {
+      if (!canEdit) return;
       const card = event.target.closest(".section7-schedule-card");
       if (!card || !scheduleCards.contains(card)) return;
       openSchedulePopupEdit(card);
     });
 
     scheduleCards.addEventListener("keydown", function (event) {
+      if (!canEdit) return;
       if (event.key !== "Enter" && event.key !== " ") return;
       const card = event.target.closest(".section7-schedule-card");
       if (!card || !scheduleCards.contains(card)) return;
@@ -215,12 +242,15 @@
   function hydrateSection7() {
     if (!PU || !PU.supabase) return;
     getActiveUserId()
-      .then(function (userId) {
-        if (!userId) return [];
+      .then(function (currentUserId) {
+        if (!currentUserId) return [];
+        targetUserId = viewedUserId || currentUserId;
+        canEdit = !viewedUserId || viewedUserId === currentUserId;
+        applyEditabilityState();
         return PU.supabase
           .from("schedules")
           .select("days, times, created_at")
-          .eq("user_id", userId)
+          .eq("user_id", targetUserId)
           .order("created_at", { ascending: true });
       })
       .then(function (res) {
@@ -240,6 +270,7 @@
           }
         });
         if (res.data && res.data.length) return;
+        if (!canEdit) return;
         if (!PU || typeof PU.ensureProgramPayload !== "function") return;
         return PU.ensureProgramPayload().then(function () {
           const s7 = PU.programPayload.section7;

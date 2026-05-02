@@ -24,12 +24,12 @@
   <div class="shell" data-node-id="86:1335" data-name="backing">
     <img src="assets/section2-shell.svg" alt="" class="section2-shell-art" data-node-id="86:1316" decoding="async">
     <div class="section2-avatar-links" aria-label="Coworker profiles">
-      <a href="section8.html" class="section2-avatar-hit section2-avatar-hit--1" aria-label="Open section 8"></a>
-      <a href="section9.html" class="section2-avatar-hit section2-avatar-hit--2" aria-label="Open section 9"></a>
-      <a href="section10.html" class="section2-avatar-hit section2-avatar-hit--3" aria-label="Open section 10"></a>
-      <a href="section11.html" class="section2-avatar-hit section2-avatar-hit--4" aria-label="Open section 11"></a>
-      <a href="section12.html" class="section2-avatar-hit section2-avatar-hit--5" aria-label="Open section 12"></a>
-      <a href="section13.html" class="section2-avatar-hit section2-avatar-hit--6" aria-label="Open section 13"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--1" aria-label="View participant schedule"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--2" aria-label="View participant schedule"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--3" aria-label="View participant schedule"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--4" aria-label="View participant schedule"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--5" aria-label="View participant schedule"></a>
+      <a href="section7.html" class="section2-avatar-hit section2-avatar-hit--6" aria-label="View participant schedule"></a>
     </div>
     <div class="section2-calendar-layer">
       <section class="s1-top-card section2-calendar" aria-label="Calendar">
@@ -60,6 +60,7 @@
   </div>
   <script>
     (function () {
+      var PU = window.PublicUtility;
       var root = document.querySelector(".section2-calendar-layer");
       if (!root) return;
       var monthEl = root.querySelector(".s1-top-card__month");
@@ -127,6 +128,49 @@
         render();
       }
 
+      async function hydrateAvatarLinks() {
+        var avatarLinks = Array.from(document.querySelectorAll(".section2-avatar-hit"));
+        if (!avatarLinks.length || !PU || !PU.supabase) return;
+        try {
+          var sessionRes = await PU.supabase.auth.getSession();
+          var currentUserId =
+            sessionRes &&
+            sessionRes.data &&
+            sessionRes.data.session &&
+            sessionRes.data.session.user &&
+            sessionRes.data.session.user.id
+              ? sessionRes.data.session.user.id
+              : null;
+          var rowsRes = await PU.supabase
+            .from("program_state")
+            .select("user_id, updated_at")
+            .order("updated_at", { ascending: false });
+          if (rowsRes.error || !rowsRes.data) return;
+          var uniqueOtherUserIds = [];
+          var seen = {};
+          rowsRes.data.forEach(function (row) {
+            var id = row && row.user_id ? row.user_id : null;
+            if (!id || id === currentUserId || seen[id]) return;
+            seen[id] = true;
+            uniqueOtherUserIds.push(id);
+          });
+          avatarLinks.forEach(function (link, index) {
+            var participantId = uniqueOtherUserIds[index];
+            if (!participantId) {
+              link.href = "section7.html";
+              link.style.pointerEvents = "none";
+              link.setAttribute("aria-disabled", "true");
+              return;
+            }
+            link.href = "section7.html?user=" + encodeURIComponent(participantId);
+            link.style.pointerEvents = "";
+            link.removeAttribute("aria-disabled");
+          });
+        } catch (err) {
+          console.error("[section2] hydrate avatars", err);
+        }
+      }
+
       root.querySelector(".s1-top-card__nav-btn--left")?.addEventListener("click", function () {
         stepMonth(-1);
       });
@@ -152,6 +196,7 @@
       });
 
       render();
+      hydrateAvatarLinks();
     })();
   </script>
 </body>

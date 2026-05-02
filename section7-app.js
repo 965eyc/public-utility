@@ -7,6 +7,7 @@
   const scheduleCards = document.getElementById("section7-schedule-cards");
   const confirmBtn = document.getElementById("section7-schedule-confirm");
   let editingCard = null;
+  let activeUserId = null;
 
   if (!triggers.length || !popups.length) return;
 
@@ -76,6 +77,38 @@
     PU.setProgramSection("section7", { cards: serializeScheduleCards() }).catch(function (err) {
       console.error("[section7] persist", err);
     });
+    persistSchedulesTable().catch(function (err) {
+      console.error("[section7] persist schedules table", err);
+    });
+  }
+
+  async function getActiveUserId() {
+    if (activeUserId) return activeUserId;
+    if (!PU || !PU.supabase) return null;
+    const {
+      data: { session },
+    } = await PU.supabase.auth.getSession();
+    if (!session || !session.user) return null;
+    activeUserId = session.user.id;
+    return activeUserId;
+  }
+
+  async function persistSchedulesTable() {
+    if (!PU || !PU.supabase) return;
+    const userId = await getActiveUserId();
+    if (!userId) return;
+    const rows = serializeScheduleCards().map(function (row) {
+      return {
+        user_id: userId,
+        days: row.days,
+        times: row.times || "",
+      };
+    });
+    const del = await PU.supabase.from("schedules").delete().eq("user_id", userId);
+    if (del.error) throw del.error;
+    if (rows.length === 0) return;
+    const ins = await PU.supabase.from("schedules").insert(rows);
+    if (ins.error) throw ins.error;
   }
 
   const openSchedulePopupNew = function () {
@@ -180,17 +213,44 @@
   });
 
   function hydrateSection7() {
-    if (!PU || typeof PU.ensureProgramPayload !== "function") return;
-    PU.ensureProgramPayload()
-      .then(function () {
-        const s7 = PU.programPayload.section7;
-        if (s7 && Array.isArray(s7.cards)) {
-          s7.cards.forEach(function (parts) {
-            if (parts && (parts.days || parts.times)) {
-              scheduleCards.appendChild(createCardFromParts(parts));
-            }
-          });
+    if (!PU || !PU.supabase) return;
+    getActiveUserId()
+      .then(function (userId) {
+        if (!userId) return [];
+        return PU.supabase
+          .from("schedules")
+          .select("days, times, created_at")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: true });
+      })
+      .then(function (res) {
+        if (!res || res.error) {
+          if (res && res.error) console.error("[section7] load schedules table", res.error);
+          return;
         }
+        scheduleCards.innerHTML = "";
+        (res.data || []).forEach(function (parts) {
+          if (parts && (parts.days || parts.times)) {
+            scheduleCards.appendChild(
+              createCardFromParts({
+                days: parts.days || "",
+                times: parts.times || "",
+              })
+            );
+          }
+        });
+        if (res.data && res.data.length) return;
+        if (!PU || typeof PU.ensureProgramPayload !== "function") return;
+        return PU.ensureProgramPayload().then(function () {
+          const s7 = PU.programPayload.section7;
+          if (s7 && Array.isArray(s7.cards)) {
+            s7.cards.forEach(function (parts) {
+              if (parts && (parts.days || parts.times)) {
+                scheduleCards.appendChild(createCardFromParts(parts));
+              }
+            });
+          }
+        });
       })
       .catch(function (err) {
         console.error("[section7] hydrate", err);

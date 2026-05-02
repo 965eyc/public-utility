@@ -1270,6 +1270,13 @@ body.page-section7 .shell {
   pointer-events: none;
 }
 
+/* Avatar deep-link (?user=): shrink top-card person icon (head + torso) proportionally. */
+body.page-section7.section7-from-avatar .section7-top-card-art #section7-top-card-avatar-figure {
+  transform: scale(0.84);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 .section7-profile-stack {
   position: absolute;
   left: 50%;

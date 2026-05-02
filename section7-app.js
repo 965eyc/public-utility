@@ -18,6 +18,7 @@
   if (!triggers.length || !popups.length) return;
 
   if (viewedUserId) {
+    document.body.classList.add("section7-from-avatar");
     if (scheduleEditTrigger) {
       scheduleEditTrigger.style.display = "none";
       scheduleEditTrigger.setAttribute("aria-hidden", "true");
@@ -177,6 +178,7 @@
       if (!line) return;
       line.style.display = canEdit ? "" : "none";
     });
+    document.body.classList.toggle("section7-from-avatar", !canEdit);
   };
 
   const closePopup = function (popup) {

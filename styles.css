@@ -1270,9 +1270,9 @@ body.page-section7 .shell {
   pointer-events: none;
 }
 
-/* Avatar deep-link (?user=): shrink top-card person icon (head + torso) proportionally. */
+/* Avatar deep-link (?user= other user): smaller person icon (head + torso), shifted up. */
 body.page-section7.section7-from-avatar .section7-top-card-art #section7-top-card-avatar-figure {
-  transform: scale(0.84);
+  transform: translate(0, -18px) scale(0.82);
   transform-box: fill-box;
   transform-origin: center;
 }

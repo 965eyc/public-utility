@@ -1,4 +1,5 @@
 <svg width="1090" height="1298" viewBox="0 0 1090 1298" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1090" height="1298" fill="url(#signupShellBleedFill)"/>
 <rect x="332" y="152" width="450" height="994" fill="white"/>
 <g filter="url(#filter0_f_296_1230)">
 <ellipse cx="713.5" cy="933.5" rx="296.5" ry="284.5" fill="url(#paint0_radial_296_1230)"/>
@@ -9,6 +10,14 @@
 </g>
 <rect x="332" y="152" width="465" height="1014" fill="white" fill-opacity="0.3"/>
 <defs>
+<linearGradient id="signupShellBleedFill" x1="0" y1="0" x2="1090" y2="1298" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4379FF"/>
+<stop offset="0.28" stop-color="#B6C4FF"/>
+<stop offset="0.48" stop-color="#FFE78F"/>
+<stop offset="0.62" stop-color="#FBC701"/>
+<stop offset="0.8" stop-color="#FF774E"/>
+<stop offset="1" stop-color="#FF3C00"/>
+</linearGradient>
 <filter id="filter0_f_296_1230" x="337" y="569" width="753" height="729" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>

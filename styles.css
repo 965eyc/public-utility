@@ -8,6 +8,22 @@
 :root {
   --shell-max: 440px;
   --shell-height: 956px;
+  /* Outer breathing room around the phone shell (inside safe areas). */
+  --shell-pad: 16px;
+  /* Dynamic viewport height for scale math on mobile; falls back where unsupported. */
+  --shell-vh-for-scale: 100vh;
+  --shell-scale: min(
+    1,
+    calc(
+      (100vw - 2 * var(--shell-pad) - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) /
+        440px
+    ),
+    calc(
+      (var(--shell-vh-for-scale) - 2 * var(--shell-pad) - env(safe-area-inset-top, 0px) -
+          env(safe-area-inset-bottom, 0px)) /
+        956px
+    )
+  );
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -24,7 +40,7 @@
   --s1-dock-bg: #0d1642;
   --s1-dock-h: 72px;
   /* Matches fixed pill nav width — List (3rd) sits on this strip’s horizontal center */
-  --s1-pill-width: min(320px, calc(100vw - 40px));
+  --s1-pill-width: min(320px, calc(var(--shell-max) - 40px));
 
   /* Screen 2 (22-35) */
   --s2-bg: #e64a19;
@@ -48,6 +64,12 @@
   --s3-fab-ring: #ffffff;
 }
 
+@supports (height: 100dvh) {
+  :root {
+    --shell-vh-for-scale: 100dvh;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -55,12 +77,16 @@
 }
 
 html {
-  height: 100%;
+  min-height: var(--shell-vh-for-scale);
 }
 
 body {
   margin: 0;
-  min-height: 100%;
+  min-height: var(--shell-vh-for-scale);
+  padding: calc(var(--shell-pad) + env(safe-area-inset-top, 0px))
+    calc(var(--shell-pad) + env(safe-area-inset-right, 0px))
+    calc(var(--shell-pad) + env(safe-area-inset-bottom, 0px))
+    calc(var(--shell-pad) + env(safe-area-inset-left, 0px));
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.45;
@@ -75,6 +101,10 @@ body {
   height: var(--shell-height);
   position: relative;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+  transform: scale(var(--shell-scale));
+  transform-origin: top center;
+  /* Collapse layout gap so the scaled shell does not leave a tall empty scroll area. */
+  margin-bottom: calc(-1 * var(--shell-height) * (1 - var(--shell-scale)));
 }
 
 .sr-only {
@@ -105,7 +135,7 @@ body.page-index .app__header {
 
 body.page-index .app {
   /* Fill space above fixed pill nav so stacked cards can sit low and centered */
-  min-height: calc(100vh - var(--s1-dock-h) - 24px - var(--safe-bottom));
+  min-height: calc(var(--shell-height) - var(--s1-dock-h) - 24px - var(--safe-bottom));
 }
 
 body.page-index .app__main {
@@ -1314,7 +1344,7 @@ body.page-section7 .shell {
 body.page-section7.section7-from-avatar .section7-top-card-name {
   font-size: clamp(
     1.5rem,
-    calc((36 / 449) * min(100vw, var(--shell-max)) - 4px),
+    calc((36 / 449) * var(--shell-max) - 4px),
     2.125rem
   );
   line-height: 1.12;

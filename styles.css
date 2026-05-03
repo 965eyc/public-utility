@@ -1634,6 +1634,24 @@ body.page-signup .shell--signup {
   display: block;
 }
 
+.shell__splash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background-image: url("assets/splash.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.shell__splash.shell__splash--hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .signup {
   position: relative;
   z-index: 1;

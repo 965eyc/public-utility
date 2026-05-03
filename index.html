@@ -38,11 +38,36 @@
         <button type="button" class="signup__link-btn" id="mode-toggle">Already have an account? Sign in</button>
       </p>
     </main>
+    <div class="shell__splash" id="shell-splash" aria-hidden="true"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="project-shared.js"></script>
   <script src="supabase-client.js"></script>
+  <script>
+    (function () {
+      var splash = document.getElementById("shell-splash");
+      if (splash) {
+        window.setTimeout(function () {
+          var gone = false;
+          function done() {
+            if (gone) return;
+            gone = true;
+            splash.remove();
+          }
+          splash.classList.add("shell__splash--hide");
+          splash.addEventListener(
+            "transitionend",
+            function (e) {
+              if (e.propertyName === "opacity") done();
+            },
+            { once: true }
+          );
+          window.setTimeout(done, 500);
+        }, 3000);
+      }
+    })();
+  </script>
   <script>
     (function () {
       var MIN_PASSWORD = 8;

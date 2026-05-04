@@ -1327,17 +1327,17 @@ body.page-section3 .app__main {
   left: 50%;
   /* Anchored to the full yellow panel so it can sit well below the calendar card. */
   top: auto;
-  bottom: 22.5%;
+  bottom: 23.2%;
   transform: translateX(-50%);
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 14px;
-  width: min(236px, 67%);
-  max-width: 260px;
-  padding: 15px 16px 16px;
-  border-radius: 19px;
+  width: min(238px, 67%);
+  max-width: 262px;
+  padding: 16px 17px 17px;
+  border-radius: 20px;
   background: rgba(31, 40, 91, 0.28);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(8px);

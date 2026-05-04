@@ -1362,23 +1362,18 @@ body.page-section3 .app__main {
   height: 92px;
   border-radius: 16px;
   overflow: hidden;
+  /* Outer rim only — inset shadows were shrinking the visible “black” vs grey slot */
   background: #1c1c1e;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
-    0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-/* Selection slot — nearly edge-to-edge inside the black tile */
+/* Selection slot: full tile — grey panel matches outer black shell (scroll/touch unchanged; pointer-events none) */
 #section3-popup .section3-popup-flip-wheel__highlight {
   position: absolute;
-  left: 2px;
-  right: 2px;
-  top: 2px;
-  bottom: 2px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.11);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   pointer-events: none;
   z-index: 2;
 }

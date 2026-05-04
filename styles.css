@@ -1264,6 +1264,39 @@ body.page-section3 .app__main {
   padding: 10px;
 }
 
+/* First section 3 popup (#section3-open-popup): full gradient panel art */
+#section3-popup .section3-popup__panel--svg-fill {
+  background: transparent;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+  padding: 0;
+  min-height: 0;
+  width: min(96%, 400px);
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  border-radius: 30px;
+  position: relative;
+}
+
+#section3-popup .section3-popup__close--on-art {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+#section3-popup .section3-popup__svg-wrap {
+  line-height: 0;
+  display: block;
+}
+
+#section3-popup .section3-popup__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
 .section4-shell-art {
   display: block;
   width: 100%;

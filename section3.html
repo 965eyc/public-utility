@@ -199,13 +199,21 @@
     <svg width="171" height="115" viewBox="0 0 171 115" fill="none" xmlns="http://www.w3.org/2000/svg" class="section3-top-overlay" aria-hidden="true">
 <path d="M2.94447e-05 114.08V111.52L44.8 58.72C48.2134 54.7733 50.9334 51.04 52.96 47.52C54.9867 43.8933 56 40.3733 56 36.96C56 32.16 54.56 28.2667 51.68 25.28C48.8 22.2933 44.7467 20.8 39.52 20.8C34.2934 20.8 30.24 22.4 27.36 25.6C24.5867 28.6933 23.2 33.12 23.2 38.88H2.94447e-05C2.94447e-05 31.2 1.7067 24.4267 5.12003 18.56C8.64003 12.6933 13.3867 8.16001 19.36 4.96001C25.3334 1.65334 32.16 7.62939e-06 39.84 7.62939e-06C47.6267 7.62939e-06 54.4534 1.60001 60.32 4.80001C66.1867 8.00001 70.7734 12.32 74.08 17.76C77.4934 23.0933 79.2 29.0667 79.2 35.68C79.2 40.16 78.5067 44.4267 77.12 48.48C75.7334 52.4267 73.1734 56.7467 69.44 61.44L52 84.16C50.6134 85.9733 49.0667 87.7867 47.36 89.6C45.76 91.4133 44 93.0133 42.08 94.4H79.84V114.08H2.94447e-05ZM103.005 114.08L129.085 74.72C120.658 75.4667 113.352 74.4 107.165 71.52C100.978 68.64 96.1784 64.32 92.765 58.56C89.4584 52.8 87.805 46.08 87.805 38.4C87.805 30.9333 89.565 24.32 93.085 18.56C96.605 12.8 101.458 8.26668 107.645 4.96001C113.938 1.65334 121.085 7.62939e-06 129.085 7.62939e-06C137.192 7.62939e-06 144.285 1.65334 150.365 4.96001C156.552 8.26668 161.352 12.8 164.765 18.56C168.285 24.32 170.045 30.9333 170.045 38.4C170.045 42.4533 169.512 46.56 168.445 50.72C167.485 54.7733 165.032 59.7867 161.085 65.76L129.085 114.08H103.005ZM128.925 57.28C132.765 57.28 136.018 56.3733 138.685 54.56C141.352 52.7467 143.378 50.4 144.765 47.52C146.152 44.64 146.845 41.6 146.845 38.4C146.845 33.6 145.298 29.4933 142.205 26.08C139.112 22.56 134.738 20.8 129.085 20.8C123.325 20.8 118.845 22.56 115.645 26.08C112.552 29.4933 111.005 33.6 111.005 38.4C111.005 41.6 111.698 44.64 113.085 47.52C114.472 50.4 116.498 52.7467 119.165 54.56C121.938 56.3733 125.192 57.28 128.925 57.28Z" fill="#FF3C00"/>
 </svg>
-    <div id="section3-popup" class="section3-popup" role="dialog" aria-modal="true" aria-labelledby="section3-popup-title" hidden>
+    <div id="section3-popup" class="section3-popup" role="dialog" aria-modal="true" aria-label="Popup panel" hidden>
       <div class="section3-popup__backdrop" data-popup-close></div>
-      <div class="section3-popup__panel">
-        <button type="button" class="section3-popup__close" data-popup-close aria-label="Close popup">Close</button>
-        <h2 id="section3-popup-title" class="section3-popup__title">Popup</h2>
-        <div id="section3-popup-content" class="section3-popup__content">
-          <!-- Future SVG content can be inserted here -->
+      <div class="section3-popup__panel section3-popup__panel--svg-fill">
+        <button type="button" class="section3-popup__close section3-popup__close--on-art" data-popup-close aria-label="Close popup">Close</button>
+        <div class="section3-popup__svg-wrap">
+          <svg class="section3-popup__svg" width="427" height="942" viewBox="0 0 427 942" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect width="427" height="941" rx="30" fill="#FFE78F" fill-opacity="0.5"/>
+            <rect y="1" width="427" height="941" rx="30" fill="url(#section3-popup-gradient)" fill-opacity="0.5"/>
+            <defs>
+              <linearGradient id="section3-popup-gradient" x1="213.5" y1="1" x2="213.5" y2="942" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FBC701"/>
+                <stop offset="1" stop-color="#FFE78F"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
       </div>
     </div>

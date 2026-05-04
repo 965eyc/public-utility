@@ -237,6 +237,10 @@
       const openPopup = function (popupId) {
         const popup = document.getElementById(popupId);
         if (!popup) return;
+        const popupPanel = popup.querySelector(".section3-popup__panel");
+        if (popupPanel) {
+          popupPanel.classList.remove("section3-popup__panel--swipe-out");
+        }
         popup.hidden = false;
       };
 
@@ -296,7 +300,11 @@
           const deltaX = Math.abs(touch.clientX - touchStartX);
 
           if (deltaY > minSwipeDistance && deltaX < maxHorizontalDrift) {
-            closePopup(raincheckPopup);
+            raincheckPanel.classList.add("section3-popup__panel--swipe-out");
+            window.setTimeout(function () {
+              closePopup(raincheckPopup);
+              raincheckPanel.classList.remove("section3-popup__panel--swipe-out");
+            }, 420);
           }
 
           touchStartY = null;

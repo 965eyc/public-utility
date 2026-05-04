@@ -1276,6 +1276,14 @@ body.page-section3 .app__main {
   overflow: hidden;
   border-radius: 30px;
   position: relative;
+  transform: translate(-50%, -50%);
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 420ms ease;
+  will-change: transform, opacity;
+}
+
+#section3-popup .section3-popup__panel--svg-fill.section3-popup__panel--swipe-out {
+  transform: translate(-50%, -130%);
+  opacity: 0.9;
 }
 
 #section3-popup .section3-popup__close--on-art {

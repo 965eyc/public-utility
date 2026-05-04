@@ -348,7 +348,8 @@
         ];
         var year = 2027;
         var month = 0;
-        var selectedDay = 29;
+        /** No day highlighted until the user picks one (single selection). */
+        var selectedDay = null;
 
         function cellCount() {
           var first = new Date(year, month, 1).getDay();
@@ -373,7 +374,7 @@
             } else {
               cell.className = "calendar-grid__cell";
               cell.setAttribute("data-day", String(day));
-              if (day === selectedDay) {
+              if (selectedDay != null && day === selectedDay) {
                 cell.classList.add("calendar-grid__cell--mark");
               }
               day++;
@@ -392,7 +393,7 @@
             year--;
           }
           var maxDay = new Date(year, month + 1, 0).getDate();
-          if (selectedDay > maxDay) selectedDay = maxDay;
+          if (selectedDay != null && selectedDay > maxDay) selectedDay = maxDay;
           render();
         }
 

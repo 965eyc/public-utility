@@ -1416,6 +1416,10 @@ body.page-section3 .app__main {
   border-radius: 10px;
 }
 
+#section3-popup .section3-popup-calendar .calendar-grid__cell[data-day] {
+  cursor: pointer;
+}
+
 #section3-popup .section3-popup-calendar .calendar-grid__cell::before {
   font-size: 16px;
 }

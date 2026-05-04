@@ -1309,7 +1309,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-calendar-layer {
   position: absolute;
   left: 50%;
-  top: 42%;
+  top: 36%;
   transform: translate(-50%, -50%);
   width: min(390px, calc(100% - 32px));
   height: min(400px, calc(100% - 44px));
@@ -1322,7 +1322,7 @@ body.page-section3 .app__main {
   display: flex;
   flex-direction: column;
   margin: 0;
-  border: 4px solid #4379ff;
+  border: 0;
   border-radius: 22px;
   padding: 10px 10px 12px;
   background: linear-gradient(180deg, #4379ff 0%, #89a7ff 56%, #b6c4ff 100%);

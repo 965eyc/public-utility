@@ -1270,8 +1270,9 @@ body.page-section3 .app__main {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
   padding: 0;
   min-height: 0;
-  width: min(92vw, calc(94vh * 431 / 943));
-  max-height: 94vh;
+  width: min(431px, calc(100% - 12px));
+  height: min(943px, calc(100% - 12px));
+  max-height: none;
   overflow: hidden;
   border-radius: 30px;
   position: relative;
@@ -1293,7 +1294,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup__svg {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   vertical-align: top;
 }
 

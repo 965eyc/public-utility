@@ -1323,15 +1323,15 @@ body.page-section3 .app__main {
   -webkit-backdrop-filter: blur(40px) saturate(120%);
   background: linear-gradient(
     180deg,
-    rgba(255, 245, 201, 0.7) 0%,
-    rgba(255, 240, 184, 0.74) 52%,
-    rgba(255, 236, 170, 0.78) 100%
+    rgba(255, 245, 201, 0.65) 0%,
+    rgba(255, 240, 184, 0.69) 52%,
+    rgba(255, 236, 170, 0.73) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -30px 44px rgba(255, 199, 1, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -30px 44px rgba(255, 199, 1, 0.19);
 }
 
 #section3-popup .section3-popup__svg {
@@ -1351,12 +1351,12 @@ body.page-section3 .app__main {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.38), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.1) 100%);
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.33), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
 
 #section3-popup .section3-popup__backdrop {
-  background: rgba(31, 40, 91, 0.5);
+  background: rgba(31, 40, 91, 0.475);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }

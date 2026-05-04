@@ -1325,11 +1325,11 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-time-overlay {
   position: absolute;
   left: 50%;
-  /* Pin near the bottom of the calendar layer (below the grid, above card padding). */
+  /* Anchored to the full yellow panel so it can sit well below the calendar card. */
   top: auto;
-  bottom: 6px;
+  bottom: 3%;
   transform: translateX(-50%);
-  z-index: 4;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: stretch;

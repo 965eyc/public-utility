@@ -1317,6 +1317,21 @@ body.page-section3 .app__main {
   pointer-events: auto;
 }
 
+#section3-popup .section3-popup__panel--svg-fill {
+  /* Frosted glass treatment for the yellow popup shell */
+  backdrop-filter: blur(22px) saturate(145%);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -24px 36px rgba(255, 199, 1, 0.12);
+}
+
+#section3-popup .section3-popup__svg {
+  filter: saturate(0.92) brightness(1.03);
+  opacity: 0.9;
+}
+
 #section3-popup .section3-popup-calendar {
   height: 100%;
   display: flex;

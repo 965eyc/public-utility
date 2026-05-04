@@ -428,8 +428,8 @@
           var overlay = document.getElementById("section3-popup-time-overlay");
           if (!overlay) return;
 
-          /* Square tile viewport is 72px; each option is one full tile width (scroll-snap page). */
-          var TILE = 72;
+          /* Square tile viewport height (must match .section3-popup-flip-wheel__shell--tile); each row is one snap step. */
+          var TILE = 92;
           var hourValues = [];
           for (var h = 1; h <= 12; h++) {
             hourValues.push(h < 10 ? "0" + h : String(h));
@@ -442,20 +442,16 @@
 
           var state = { hourIdx: 11, minuteIdx: 0, meridianIdx: 0 };
 
-          function buildWheel(label, values, stateKey, isMeridian) {
+          function buildWheel(values, stateKey, isMeridian, ariaLabel) {
             var block = document.createElement("div");
             block.className = "section3-popup-time-tile" + (isMeridian ? " section3-popup-time-tile--meridian" : "");
-            var lab = document.createElement("span");
-            lab.className = "section3-popup-flip-wheel__label";
-            lab.textContent = label;
-            block.appendChild(lab);
 
             var shell = document.createElement("div");
             shell.className = "section3-popup-flip-wheel__shell section3-popup-flip-wheel__shell--tile";
             var track = document.createElement("div");
             track.className = "section3-popup-flip-wheel__track";
             track.setAttribute("role", "listbox");
-            track.setAttribute("aria-label", label);
+            track.setAttribute("aria-label", ariaLabel);
             track.tabIndex = 0;
 
             var highlight = document.createElement("div");
@@ -477,8 +473,8 @@
             block.appendChild(shell);
 
             function step() {
-              var w = track.clientWidth;
-              return w > 0 ? w : TILE;
+              var h = track.clientHeight;
+              return h > 0 ? h : TILE;
             }
 
             function setActiveVisual(idx) {
@@ -493,13 +489,13 @@
             function scrollToIndex(idx, behavior) {
               idx = Math.max(0, Math.min(values.length - 1, idx));
               state[stateKey] = idx;
-              track.scrollTo({ left: idx * step(), behavior: behavior || "auto" });
+              track.scrollTo({ top: idx * step(), behavior: behavior || "auto" });
               setActiveVisual(idx);
             }
 
             function nearestIndex() {
               var s = step();
-              return Math.max(0, Math.min(values.length - 1, Math.round(track.scrollLeft / s)));
+              return Math.max(0, Math.min(values.length - 1, Math.round(track.scrollTop / s)));
             }
 
             function syncFromScroll() {
@@ -512,7 +508,7 @@
             function onScrollSettled() {
               var idx = nearestIndex();
               var target = idx * step();
-              if (Math.abs(track.scrollLeft - target) < 1) {
+              if (Math.abs(track.scrollTop - target) < 1) {
                 state[stateKey] = idx;
                 setActiveVisual(idx);
                 return;
@@ -528,10 +524,10 @@
 
             track.addEventListener("keydown", function (event) {
               var idx = state[stateKey];
-              if (event.key === "ArrowLeft") {
+              if (event.key === "ArrowUp") {
                 event.preventDefault();
                 scrollToIndex(idx - 1, "smooth");
-              } else if (event.key === "ArrowRight") {
+              } else if (event.key === "ArrowDown") {
                 event.preventDefault();
                 scrollToIndex(idx + 1, "smooth");
               } else if (event.key === "Home") {
@@ -549,9 +545,9 @@
             return block;
           }
 
-          overlay.appendChild(buildWheel("Hour", hourValues, "hourIdx", false));
-          overlay.appendChild(buildWheel("Minute", minuteValues, "minuteIdx", false));
-          overlay.appendChild(buildWheel("AM / PM", meridianValues, "meridianIdx", true));
+          overlay.appendChild(buildWheel(hourValues, "hourIdx", false, "Hour"));
+          overlay.appendChild(buildWheel(minuteValues, "minuteIdx", false, "Minute"));
+          overlay.appendChild(buildWheel(meridianValues, "meridianIdx", true, "AM or PM"));
         })();
 
         render();

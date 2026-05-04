@@ -214,6 +214,26 @@
             </defs>
           </svg>
         </div>
+        <div class="section3-popup-calendar-layer">
+          <section class="s1-top-card section3-popup-calendar" aria-label="Accept date calendar">
+            <div class="s1-top-card__top">
+              <h2 id="section3-popup-calendar-month" class="s1-top-card__month">January 2027</h2>
+              <button type="button" class="section2-month-plus-btn" aria-label="Calendar action">
+                <svg width="97" height="57" viewBox="0 0 97 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="97" height="57" rx="15" fill="#B6C4FF"/>
+                  <line x1="4" y1="-4" x2="33.0101" y2="-4" transform="matrix(-0.00524368 0.999986 -0.99999 -0.00448889 44.0126 10)" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+                  <line x1="4" y1="-4" x2="36.0007" y2="-4" transform="matrix(-0.999982 -0.00591654 0.00691137 -0.999976 68 25.343)" stroke="#FFFCFC" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="s1-top-card__bar" role="presentation"></div>
+            <div class="calendar-grid" id="section3-popup-calendar-grid"></div>
+            <div class="s1-top-card__nav" aria-hidden="true">
+              <span class="s1-top-card__nav-btn s1-top-card__nav-btn--left" role="button" tabindex="0" aria-label="Previous month"></span>
+              <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right" role="button" tabindex="0" aria-label="Next month"></span>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
     <div id="section3-popup-2" class="section3-popup" role="dialog" aria-modal="true" aria-labelledby="section3-popup-title-2" hidden>
@@ -321,6 +341,96 @@
 
       registerSwipeToClose("section3-popup");
       registerSwipeToClose("section3-popup-2");
+
+      (function setupPopupCalendar() {
+        var root = document.querySelector("#section3-popup .section3-popup-calendar-layer");
+        if (!root) return;
+        var monthEl = document.getElementById("section3-popup-calendar-month");
+        var gridEl = document.getElementById("section3-popup-calendar-grid");
+        if (!monthEl || !gridEl) return;
+
+        var months = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        var year = 2027;
+        var month = 0;
+        var selectedDay = 29;
+
+        function cellCount() {
+          var first = new Date(year, month, 1).getDay();
+          var dim = new Date(year, month + 1, 0).getDate();
+          var used = first + dim;
+          var total = Math.ceil(used / 7) * 7;
+          if (total < 35) total = 35;
+          if (total > 42) total = 42;
+          return { first: first, dim: dim, total: total };
+        }
+
+        function render() {
+          var info = cellCount();
+          monthEl.textContent = months[month] + " " + year;
+          gridEl.innerHTML = "";
+          var day = 1;
+          for (var i = 0; i < info.total; i++) {
+            var cell = document.createElement("div");
+            if (i < info.first || day > info.dim) {
+              cell.className = "calendar-grid__cell";
+              cell.setAttribute("aria-hidden", "true");
+            } else {
+              cell.className = "calendar-grid__cell";
+              cell.setAttribute("data-day", String(day));
+              if (day === selectedDay) {
+                cell.classList.add("calendar-grid__cell--mark");
+              }
+              day++;
+            }
+            gridEl.appendChild(cell);
+          }
+        }
+
+        function stepMonth(delta) {
+          month += delta;
+          if (month > 11) {
+            month = 0;
+            year++;
+          } else if (month < 0) {
+            month = 11;
+            year--;
+          }
+          var maxDay = new Date(year, month + 1, 0).getDate();
+          if (selectedDay > maxDay) selectedDay = maxDay;
+          render();
+        }
+
+        function keyNav(event, delta) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            stepMonth(delta);
+          }
+        }
+
+        root.querySelector(".s1-top-card__nav-btn--left")?.addEventListener("click", function () {
+          stepMonth(-1);
+        });
+        root.querySelector(".s1-top-card__nav-btn--right")?.addEventListener("click", function () {
+          stepMonth(1);
+        });
+        root.querySelector(".s1-top-card__nav-btn--left")?.addEventListener("keydown", function (event) {
+          keyNav(event, -1);
+        });
+        root.querySelector(".s1-top-card__nav-btn--right")?.addEventListener("keydown", function (event) {
+          keyNav(event, 1);
+        });
+        gridEl.addEventListener("click", function (event) {
+          var hit = event.target.closest(".calendar-grid__cell[data-day]");
+          if (!hit || !gridEl.contains(hit)) return;
+          selectedDay = Number(hit.getAttribute("data-day"));
+          render();
+        });
+
+        render();
+      })();
 
       document.addEventListener("keydown", function (event) {
         if (event.key !== "Escape") return;

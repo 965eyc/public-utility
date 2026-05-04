@@ -202,7 +202,6 @@
     <div id="section3-popup" class="section3-popup" role="dialog" aria-modal="true" aria-label="Popup panel" hidden>
       <div class="section3-popup__backdrop" data-popup-close></div>
       <div class="section3-popup__panel section3-popup__panel--svg-fill">
-        <button type="button" class="section3-popup__close section3-popup__close--on-art" data-popup-close aria-label="Close popup">Close</button>
         <div class="section3-popup__svg-wrap">
           <svg class="section3-popup__svg" width="431" height="943" viewBox="0 0 431 943" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
             <rect width="431" height="942" rx="30" fill="#FFE78F" fill-opacity="0.5"/>
@@ -270,6 +269,40 @@
           });
         });
       });
+
+      const raincheckPopup = document.getElementById("section3-popup");
+      const raincheckPanel = raincheckPopup
+        ? raincheckPopup.querySelector(".section3-popup__panel--svg-fill")
+        : null;
+      if (raincheckPopup && raincheckPanel) {
+        let touchStartY = null;
+        let touchStartX = null;
+        const minSwipeDistance = 60;
+        const maxHorizontalDrift = 80;
+
+        raincheckPanel.addEventListener("touchstart", function (event) {
+          const touch = event.changedTouches[0];
+          if (!touch) return;
+          touchStartY = touch.clientY;
+          touchStartX = touch.clientX;
+        }, { passive: true });
+
+        raincheckPanel.addEventListener("touchend", function (event) {
+          if (touchStartY === null || touchStartX === null) return;
+          const touch = event.changedTouches[0];
+          if (!touch) return;
+
+          const deltaY = touchStartY - touch.clientY;
+          const deltaX = Math.abs(touch.clientX - touchStartX);
+
+          if (deltaY > minSwipeDistance && deltaX < maxHorizontalDrift) {
+            closePopup(raincheckPopup);
+          }
+
+          touchStartY = null;
+          touchStartX = null;
+        });
+      }
 
       document.addEventListener("keydown", function (event) {
         if (event.key !== "Escape") return;

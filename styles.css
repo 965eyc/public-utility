@@ -1412,12 +1412,12 @@ body.page-section3 .app__main {
   height: auto;
   min-height: 0;
   aspect-ratio: 1;
-  max-height: 38px;
+  max-height: 46px;
   border-radius: 10px;
 }
 
 #section3-popup .section3-popup-calendar .calendar-grid__cell::before {
-  font-size: 13px;
+  font-size: 18px;
 }
 
 #section3-popup .section3-popup-calendar .calendar-grid__cell:not([data-day])::before {

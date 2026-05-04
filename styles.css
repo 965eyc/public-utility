@@ -1356,24 +1356,27 @@ body.page-section3 .app__main {
   flex: 0 0 auto;
 }
 
+/* Outer “black” rim — highlight sits inset by 1px so both layers stay visible */
 #section3-popup .section3-popup-flip-wheel__shell--tile {
   position: relative;
   width: 92px;
   height: 92px;
   border-radius: 16px;
   overflow: hidden;
-  /* Outer rim only — inset shadows were shrinking the visible “black” vs grey slot */
-  background: #1c1c1e;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  background: #0a0a0b;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-/* Selection slot: full tile — grey panel matches outer black shell (scroll/touch unchanged; pointer-events none) */
+/* Inner dark grey slot — flush with outer tile except a 1px outer ring */
 #section3-popup .section3-popup-flip-wheel__highlight {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  inset: 1px;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #404042 0%, #343436 48%, #2e2e30 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   pointer-events: none;
   z-index: 2;
 }

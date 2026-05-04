@@ -1327,17 +1327,17 @@ body.page-section3 .app__main {
   left: 50%;
   /* Anchored to the full yellow panel so it can sit well below the calendar card. */
   top: auto;
-  bottom: 11%;
+  bottom: 13.5%;
   transform: translateX(-50%);
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 9px;
-  width: min(170px, 54%);
-  max-width: 188px;
-  padding: 10px 11px 11px;
-  border-radius: 14px;
+  gap: 10px;
+  width: min(184px, 58%);
+  max-width: 202px;
+  padding: 11px 12px 12px;
+  border-radius: 15px;
   background: rgba(31, 40, 91, 0.28);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(8px);
@@ -1355,7 +1355,7 @@ body.page-section3 .app__main {
 
 #section3-popup .section3-popup-flip-wheel__label {
   font-family: "Inter", system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1379,7 +1379,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-flip-wheel__hinge {
   width: 4px;
   align-self: center;
-  height: 12px;
+  height: 13px;
   flex-shrink: 0;
   border-radius: 1px;
   background: linear-gradient(180deg, #f4f4f4 0%, #c6c6c6 100%);
@@ -1389,7 +1389,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-flip-wheel__track {
   flex: 1;
   min-width: 0;
-  height: 32px;
+  height: 34px;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
@@ -1412,8 +1412,8 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-flip-wheel__shell::after {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 13px;
+  right: 13px;
   top: 50%;
   height: 1px;
   margin-top: 0;
@@ -1424,14 +1424,14 @@ body.page-section3 .app__main {
 }
 
 #section3-popup .section3-popup-flip-wheel__opt {
-  height: 32px;
-  min-height: 32px;
+  height: 34px;
+  min-height: 34px;
   scroll-snap-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: "Inter", system-ui, sans-serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
   color: #fffcfc;
   line-height: 1;
@@ -1440,7 +1440,7 @@ body.page-section3 .app__main {
 }
 
 #section3-popup .section3-popup-flip-wheel:last-child .section3-popup-flip-wheel__opt {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }

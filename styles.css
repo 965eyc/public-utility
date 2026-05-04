@@ -1312,9 +1312,10 @@ body.page-section7 .shell {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 14px;
+  bottom: 6px;
   margin: 0;
-  padding: 0 14px;
+  /* padding-top: clears vertical room under the avatar before the name (matches other profile screens). */
+  padding: 18px 14px 2px;
   box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 1.25rem;
@@ -1337,6 +1338,22 @@ body.page-section7 .shell {
 }
 
 /*
+ * Profile schedule pages: smaller avatar, shifted up in the white card (sections 8–13, etc.).
+ */
+body.page-section7 .section7-top-card-avatar {
+  transform: translate(0, -22px) scale(0.78);
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+
+/* Section 7 only: HTML name sits on the card — pull avatar up further and shrink so spacing matches other screens. */
+body.page-section7 .section7-top-card-wrap .section7-top-card-avatar {
+  transform: translate(0, -32px) scale(0.7);
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+
+/*
  * Avatar / group-tab profile (?user=): name type a few px under the rendered cap-height of the
  * "Schedule" title path in .section7-profile-art (≈36 user units in a 449-wide viewBox).
  * Scales with the same shell width the profile stack uses.
@@ -1348,13 +1365,14 @@ body.page-section7.section7-from-avatar .section7-top-card-name {
     2.125rem
   );
   line-height: 1.12;
+  padding-top: 20px;
 }
 
-/* Avatar deep-link (?user= other user): smaller person icon (head + torso), shifted up. */
-body.page-section7.section7-from-avatar .section7-top-card-art #section7-top-card-avatar-figure {
-  transform: translate(0, -18px) scale(0.82);
+/* Deep-link to another user’s schedule: slightly smaller avatar again so the larger name still balances. */
+body.page-section7.section7-from-avatar .section7-top-card-wrap .section7-top-card-avatar {
+  transform: translate(0, -36px) scale(0.64);
   transform-box: fill-box;
-  transform-origin: center;
+  transform-origin: center top;
 }
 
 .section7-profile-stack {

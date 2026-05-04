@@ -1310,12 +1310,14 @@ body.page-section7 .shell {
 /* Schedule owner name — Inter to match section7-profile-art; sits in lower white band of top card. */
 .section7-top-card-name {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 6px;
+  left: 50%;
+  right: auto;
+  bottom: 8px;
+  width: calc(100% - 28px);
+  max-width: 100%;
   margin: 0;
-  /* padding-top: clears vertical room under the avatar before the name (matches other profile screens). */
-  padding: 18px 14px 2px;
+  transform: translateX(-50%);
+  padding: 10px 4px 6px;
   box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 1.25rem;
@@ -1338,19 +1340,18 @@ body.page-section7 .shell {
 }
 
 /*
- * Profile schedule pages: smaller avatar, shifted up in the white card (sections 8–13, etc.).
+ * Profile schedule pages: avatar scaled toward the visual center of the top-card artboard (271×276 viewBox).
  */
 body.page-section7 .section7-top-card-avatar {
-  transform: translate(0, -22px) scale(0.78);
-  transform-box: fill-box;
-  transform-origin: center top;
+  transform-box: view-box;
+  transform-origin: 50% 43%;
+  transform: scale(0.78);
 }
 
-/* Section 7 only: HTML name sits on the card — pull avatar up further and shrink so spacing matches other screens. */
+/* Section 7: HTML name overlays the card — slightly smaller figure so avatar+name read centered in the white shape. */
 body.page-section7 .section7-top-card-wrap .section7-top-card-avatar {
-  transform: translate(0, -32px) scale(0.7);
-  transform-box: fill-box;
-  transform-origin: center top;
+  transform-origin: 50% 43%;
+  transform: scale(0.72);
 }
 
 /*
@@ -1365,14 +1366,14 @@ body.page-section7.section7-from-avatar .section7-top-card-name {
     2.125rem
   );
   line-height: 1.12;
-  padding-top: 20px;
+  padding: 14px 4px 6px;
+  transform: translateX(-50%);
 }
 
-/* Deep-link to another user’s schedule: slightly smaller avatar again so the larger name still balances. */
+/* Deep-link to another user’s schedule: a bit smaller so the larger name stays balanced in the white card. */
 body.page-section7.section7-from-avatar .section7-top-card-wrap .section7-top-card-avatar {
-  transform: translate(0, -36px) scale(0.64);
-  transform-box: fill-box;
-  transform-origin: center top;
+  transform-origin: 50% 43%;
+  transform: scale(0.64);
 }
 
 .section7-profile-stack {

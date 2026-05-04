@@ -226,44 +226,7 @@
               <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right" role="button" tabindex="0" aria-label="Next month"></span>
             </div>
           </section>
-          <div class="section3-time-wheels" id="section3-time-wheels" aria-label="Time">
-            <div class="section3-time-wheel-row">
-              <span class="section3-time-wheel__label" id="section3-time-label-hour">Hour</span>
-              <div
-                class="section3-time-wheel__viewport"
-                id="section3-time-hour"
-                role="listbox"
-                tabindex="0"
-                aria-labelledby="section3-time-label-hour"
-              >
-                <div class="section3-time-wheel__list" data-wheel-list="hour"></div>
-              </div>
-            </div>
-            <div class="section3-time-wheel-row">
-              <span class="section3-time-wheel__label" id="section3-time-label-minute">Minute</span>
-              <div
-                class="section3-time-wheel__viewport"
-                id="section3-time-minute"
-                role="listbox"
-                tabindex="0"
-                aria-labelledby="section3-time-label-minute"
-              >
-                <div class="section3-time-wheel__list" data-wheel-list="minute"></div>
-              </div>
-            </div>
-            <div class="section3-time-wheel-row section3-time-wheel-row--center">
-              <span class="section3-time-wheel__label" id="section3-time-label-ampm">AM / PM</span>
-              <div
-                class="section3-time-wheel__viewport section3-time-wheel__viewport--narrow"
-                id="section3-time-ampm"
-                role="listbox"
-                tabindex="0"
-                aria-labelledby="section3-time-label-ampm"
-              >
-                <div class="section3-time-wheel__list" data-wheel-list="ampm"></div>
-              </div>
-            </div>
-          </div>
+          <div class="section3-popup-time-overlay" aria-label="Select time" id="section3-popup-time-overlay"></div>
         </div>
       </div>
     </div>
@@ -351,7 +314,6 @@
 
         panel.addEventListener("touchend", function (event) {
           if (touchStartY === null || touchStartX === null) return;
-          if (event.target.closest(".section3-time-wheel__viewport")) return;
           const touch = event.changedTouches[0];
           if (!touch) return;
 
@@ -462,106 +424,112 @@
           render();
         });
 
+        (function setupTimeWheels() {
+          var overlay = document.getElementById("section3-popup-time-overlay");
+          if (!overlay) return;
+
+          var ITEM = 24;
+          var hourValues = [];
+          for (var h = 1; h <= 12; h++) {
+            hourValues.push(h < 10 ? "0" + h : String(h));
+          }
+          var minuteValues = [];
+          for (var m = 0; m < 60; m++) {
+            minuteValues.push(m < 10 ? "0" + m : String(m));
+          }
+          var meridianValues = ["AM", "PM"];
+
+          var state = { hourIdx: 11, minuteIdx: 0, meridianIdx: 0 };
+
+          function buildWheel(label, values, stateKey) {
+            var block = document.createElement("div");
+            block.className = "section3-popup-flip-wheel";
+            var lab = document.createElement("span");
+            lab.className = "section3-popup-flip-wheel__label";
+            lab.textContent = label;
+            block.appendChild(lab);
+
+            var shell = document.createElement("div");
+            shell.className = "section3-popup-flip-wheel__shell";
+            var hingeL = document.createElement("span");
+            hingeL.className = "section3-popup-flip-wheel__hinge section3-popup-flip-wheel__hinge--left";
+            hingeL.setAttribute("aria-hidden", "true");
+            var hingeR = document.createElement("span");
+            hingeR.className = "section3-popup-flip-wheel__hinge section3-popup-flip-wheel__hinge--right";
+            hingeR.setAttribute("aria-hidden", "true");
+            var track = document.createElement("div");
+            track.className = "section3-popup-flip-wheel__track";
+            track.setAttribute("role", "listbox");
+            track.setAttribute("aria-label", label);
+            track.tabIndex = 0;
+
+            values.forEach(function (v, idx) {
+              var opt = document.createElement("div");
+              opt.className = "section3-popup-flip-wheel__opt";
+              opt.textContent = v;
+              opt.setAttribute("role", "option");
+              opt.setAttribute("data-idx", String(idx));
+              track.appendChild(opt);
+            });
+
+            shell.appendChild(hingeL);
+            shell.appendChild(track);
+            shell.appendChild(hingeR);
+            block.appendChild(shell);
+
+            function scrollToIndex(idx, behavior) {
+              idx = Math.max(0, Math.min(values.length - 1, idx));
+              state[stateKey] = idx;
+              track.scrollTo({ top: idx * ITEM, behavior: behavior || "auto" });
+            }
+
+            function nearestIndex() {
+              return Math.max(0, Math.min(values.length - 1, Math.round(track.scrollTop / ITEM)));
+            }
+
+            var scrollEndTimer = null;
+            function onScrollSettled() {
+              var idx = nearestIndex();
+              var target = idx * ITEM;
+              if (Math.abs(track.scrollTop - target) < 1) {
+                state[stateKey] = idx;
+                return;
+              }
+              scrollToIndex(idx, "smooth");
+            }
+
+            track.addEventListener("scroll", function () {
+              window.clearTimeout(scrollEndTimer);
+              scrollEndTimer = window.setTimeout(onScrollSettled, 80);
+            });
+
+            track.addEventListener("keydown", function (event) {
+              var idx = state[stateKey];
+              if (event.key === "ArrowUp") {
+                event.preventDefault();
+                scrollToIndex(idx - 1, "smooth");
+              } else if (event.key === "ArrowDown") {
+                event.preventDefault();
+                scrollToIndex(idx + 1, "smooth");
+              } else if (event.key === "Home") {
+                event.preventDefault();
+                scrollToIndex(0, "smooth");
+              } else if (event.key === "End") {
+                event.preventDefault();
+                scrollToIndex(values.length - 1, "smooth");
+              }
+            });
+
+            scrollToIndex(state[stateKey], "auto");
+            return block;
+          }
+
+          overlay.appendChild(buildWheel("Hour", hourValues, "hourIdx"));
+          overlay.appendChild(buildWheel("Minute", minuteValues, "minuteIdx"));
+          overlay.appendChild(buildWheel("AM / PM", meridianValues, "meridianIdx"));
+        })();
+
         render();
-      })();
-
-      (function setupSection3TimeWheels() {
-        var ITEM = 40;
-        var hourVp = document.getElementById("section3-time-hour");
-        var minuteVp = document.getElementById("section3-time-minute");
-        var ampmVp = document.getElementById("section3-time-ampm");
-        if (!hourVp || !minuteVp || !ampmVp) return;
-
-        var hourList = hourVp.querySelector("[data-wheel-list]");
-        var minuteList = minuteVp.querySelector("[data-wheel-list]");
-        var ampmList = ampmVp.querySelector("[data-wheel-list]");
-
-        function pad2(n) {
-          return (n < 10 ? "0" : "") + n;
-        }
-
-        function fillList(listEl, values, format) {
-          listEl.innerHTML = "";
-          var spacer = document.createElement("div");
-          spacer.className = "section3-time-wheel__spacer";
-          spacer.setAttribute("aria-hidden", "true");
-          listEl.appendChild(spacer);
-          for (var i = 0; i < values.length; i++) {
-            var item = document.createElement("div");
-            item.className = "section3-time-wheel__item";
-            item.setAttribute("role", "option");
-            item.id = listEl.getAttribute("data-wheel-list") + "-opt-" + i;
-            item.setAttribute("data-index", String(i));
-            item.setAttribute("data-value", String(values[i]));
-            item.textContent = format ? format(values[i]) : String(values[i]);
-            listEl.appendChild(item);
-          }
-          var spacer2 = document.createElement("div");
-          spacer2.className = "section3-time-wheel__spacer";
-          spacer2.setAttribute("aria-hidden", "true");
-          listEl.appendChild(spacer2);
-        }
-
-        var hours = [];
-        for (var h = 1; h <= 12; h++) hours.push(h);
-        var minutes = [];
-        for (var m = 0; m < 60; m++) minutes.push(m);
-        var ampms = ["AM", "PM"];
-
-        fillList(hourList, hours, function (v) {
-          return pad2(v);
-        });
-        fillList(minuteList, minutes, pad2);
-        fillList(ampmList, ampms, null);
-
-        function scrollToIndex(vp, index) {
-          vp.scrollTop = index * ITEM;
-        }
-
-        function clampIndex(raw, maxIndex) {
-          var idx = Math.round(raw);
-          if (idx < 0) return 0;
-          if (idx > maxIndex) return maxIndex;
-          return idx;
-        }
-
-        function bindWheel(vp, maxIndex, listEl) {
-          var scrollEndTimer = null;
-          function setAriaForIndex(idx) {
-            var items = listEl.querySelectorAll(".section3-time-wheel__item");
-            var active = items[idx];
-            if (active) vp.setAttribute("aria-activedescendant", active.id);
-            else vp.removeAttribute("aria-activedescendant");
-          }
-          function finalizeSnap() {
-            var idx = clampIndex(vp.scrollTop / ITEM, maxIndex);
-            vp.scrollTop = idx * ITEM;
-            setAriaForIndex(idx);
-          }
-          function onScroll() {
-            setAriaForIndex(clampIndex(vp.scrollTop / ITEM, maxIndex));
-            if (scrollEndTimer) window.clearTimeout(scrollEndTimer);
-            scrollEndTimer = window.setTimeout(finalizeSnap, 100);
-          }
-          vp.addEventListener("scroll", onScroll, { passive: true });
-          vp.addEventListener("scrollend", finalizeSnap);
-          vp.addEventListener("touchend", function (e) {
-            e.stopPropagation();
-            window.setTimeout(finalizeSnap, 0);
-          });
-          return finalizeSnap;
-        }
-
-        scrollToIndex(hourVp, 11);
-        scrollToIndex(minuteVp, 0);
-        scrollToIndex(ampmVp, 0);
-
-        var syncH = bindWheel(hourVp, 11, hourList);
-        var syncM = bindWheel(minuteVp, 59, minuteList);
-        var syncA = bindWheel(ampmVp, 1, ampmList);
-        syncH();
-        syncM();
-        syncA();
       })();
 
       document.addEventListener("keydown", function (event) {

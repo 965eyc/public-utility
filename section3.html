@@ -226,6 +226,44 @@
               <span class="s1-top-card__nav-btn s1-top-card__nav-btn--right" role="button" tabindex="0" aria-label="Next month"></span>
             </div>
           </section>
+          <div class="section3-time-wheels" id="section3-time-wheels" aria-label="Time">
+            <div class="section3-time-wheel-row">
+              <span class="section3-time-wheel__label" id="section3-time-label-hour">Hour</span>
+              <div
+                class="section3-time-wheel__viewport"
+                id="section3-time-hour"
+                role="listbox"
+                tabindex="0"
+                aria-labelledby="section3-time-label-hour"
+              >
+                <div class="section3-time-wheel__list" data-wheel-list="hour"></div>
+              </div>
+            </div>
+            <div class="section3-time-wheel-row">
+              <span class="section3-time-wheel__label" id="section3-time-label-minute">Minute</span>
+              <div
+                class="section3-time-wheel__viewport"
+                id="section3-time-minute"
+                role="listbox"
+                tabindex="0"
+                aria-labelledby="section3-time-label-minute"
+              >
+                <div class="section3-time-wheel__list" data-wheel-list="minute"></div>
+              </div>
+            </div>
+            <div class="section3-time-wheel-row section3-time-wheel-row--center">
+              <span class="section3-time-wheel__label" id="section3-time-label-ampm">AM / PM</span>
+              <div
+                class="section3-time-wheel__viewport section3-time-wheel__viewport--narrow"
+                id="section3-time-ampm"
+                role="listbox"
+                tabindex="0"
+                aria-labelledby="section3-time-label-ampm"
+              >
+                <div class="section3-time-wheel__list" data-wheel-list="ampm"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -313,6 +351,7 @@
 
         panel.addEventListener("touchend", function (event) {
           if (touchStartY === null || touchStartX === null) return;
+          if (event.target.closest(".section3-time-wheel__viewport")) return;
           const touch = event.changedTouches[0];
           if (!touch) return;
 
@@ -424,6 +463,105 @@
         });
 
         render();
+      })();
+
+      (function setupSection3TimeWheels() {
+        var ITEM = 40;
+        var hourVp = document.getElementById("section3-time-hour");
+        var minuteVp = document.getElementById("section3-time-minute");
+        var ampmVp = document.getElementById("section3-time-ampm");
+        if (!hourVp || !minuteVp || !ampmVp) return;
+
+        var hourList = hourVp.querySelector("[data-wheel-list]");
+        var minuteList = minuteVp.querySelector("[data-wheel-list]");
+        var ampmList = ampmVp.querySelector("[data-wheel-list]");
+
+        function pad2(n) {
+          return (n < 10 ? "0" : "") + n;
+        }
+
+        function fillList(listEl, values, format) {
+          listEl.innerHTML = "";
+          var spacer = document.createElement("div");
+          spacer.className = "section3-time-wheel__spacer";
+          spacer.setAttribute("aria-hidden", "true");
+          listEl.appendChild(spacer);
+          for (var i = 0; i < values.length; i++) {
+            var item = document.createElement("div");
+            item.className = "section3-time-wheel__item";
+            item.setAttribute("role", "option");
+            item.id = listEl.getAttribute("data-wheel-list") + "-opt-" + i;
+            item.setAttribute("data-index", String(i));
+            item.setAttribute("data-value", String(values[i]));
+            item.textContent = format ? format(values[i]) : String(values[i]);
+            listEl.appendChild(item);
+          }
+          var spacer2 = document.createElement("div");
+          spacer2.className = "section3-time-wheel__spacer";
+          spacer2.setAttribute("aria-hidden", "true");
+          listEl.appendChild(spacer2);
+        }
+
+        var hours = [];
+        for (var h = 1; h <= 12; h++) hours.push(h);
+        var minutes = [];
+        for (var m = 0; m < 60; m++) minutes.push(m);
+        var ampms = ["AM", "PM"];
+
+        fillList(hourList, hours, function (v) {
+          return pad2(v);
+        });
+        fillList(minuteList, minutes, pad2);
+        fillList(ampmList, ampms, null);
+
+        function scrollToIndex(vp, index) {
+          vp.scrollTop = index * ITEM;
+        }
+
+        function clampIndex(raw, maxIndex) {
+          var idx = Math.round(raw);
+          if (idx < 0) return 0;
+          if (idx > maxIndex) return maxIndex;
+          return idx;
+        }
+
+        function bindWheel(vp, maxIndex, listEl) {
+          var scrollEndTimer = null;
+          function setAriaForIndex(idx) {
+            var items = listEl.querySelectorAll(".section3-time-wheel__item");
+            var active = items[idx];
+            if (active) vp.setAttribute("aria-activedescendant", active.id);
+            else vp.removeAttribute("aria-activedescendant");
+          }
+          function finalizeSnap() {
+            var idx = clampIndex(vp.scrollTop / ITEM, maxIndex);
+            vp.scrollTop = idx * ITEM;
+            setAriaForIndex(idx);
+          }
+          function onScroll() {
+            setAriaForIndex(clampIndex(vp.scrollTop / ITEM, maxIndex));
+            if (scrollEndTimer) window.clearTimeout(scrollEndTimer);
+            scrollEndTimer = window.setTimeout(finalizeSnap, 100);
+          }
+          vp.addEventListener("scroll", onScroll, { passive: true });
+          vp.addEventListener("scrollend", finalizeSnap);
+          vp.addEventListener("touchend", function (e) {
+            e.stopPropagation();
+            window.setTimeout(finalizeSnap, 0);
+          });
+          return finalizeSnap;
+        }
+
+        scrollToIndex(hourVp, 11);
+        scrollToIndex(minuteVp, 0);
+        scrollToIndex(ampmVp, 0);
+
+        var syncH = bindWheel(hourVp, 11, hourList);
+        var syncM = bindWheel(minuteVp, 59, minuteList);
+        var syncA = bindWheel(ampmVp, 1, ampmList);
+        syncH();
+        syncM();
+        syncA();
       })();
 
       document.addEventListener("keydown", function (event) {

@@ -1309,7 +1309,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-calendar-layer {
   position: absolute;
   left: 50%;
-  top: 22%;
+  top: 24%;
   transform: translate(-50%, -50%);
   width: min(390px, calc(100% - 32px));
   height: min(400px, calc(100% - 44px));

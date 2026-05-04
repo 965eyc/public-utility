@@ -428,7 +428,8 @@
           var overlay = document.getElementById("section3-popup-time-overlay");
           if (!overlay) return;
 
-          var ITEM = 42;
+          /* Horizontal wheel: width per option (must match CSS .section3-popup-flip-wheel__opt width). */
+          var ITEM = 48;
           var hourValues = [];
           for (var h = 1; h <= 12; h++) {
             hourValues.push(h < 10 ? "0" + h : String(h));
@@ -480,18 +481,18 @@
             function scrollToIndex(idx, behavior) {
               idx = Math.max(0, Math.min(values.length - 1, idx));
               state[stateKey] = idx;
-              track.scrollTo({ top: idx * ITEM, behavior: behavior || "auto" });
+              track.scrollTo({ left: idx * ITEM, behavior: behavior || "auto" });
             }
 
             function nearestIndex() {
-              return Math.max(0, Math.min(values.length - 1, Math.round(track.scrollTop / ITEM)));
+              return Math.max(0, Math.min(values.length - 1, Math.round(track.scrollLeft / ITEM)));
             }
 
             var scrollEndTimer = null;
             function onScrollSettled() {
               var idx = nearestIndex();
               var target = idx * ITEM;
-              if (Math.abs(track.scrollTop - target) < 1) {
+              if (Math.abs(track.scrollLeft - target) < 1) {
                 state[stateKey] = idx;
                 return;
               }
@@ -505,10 +506,10 @@
 
             track.addEventListener("keydown", function (event) {
               var idx = state[stateKey];
-              if (event.key === "ArrowUp") {
+              if (event.key === "ArrowLeft") {
                 event.preventDefault();
                 scrollToIndex(idx - 1, "smooth");
-              } else if (event.key === "ArrowDown") {
+              } else if (event.key === "ArrowRight") {
                 event.preventDefault();
                 scrollToIndex(idx + 1, "smooth");
               } else if (event.key === "Home") {

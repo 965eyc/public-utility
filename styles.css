@@ -2299,7 +2299,8 @@ body.page-community {
     /* Tighter horizontal margin + slight boost ≈ large-phone portrait (e.g. 1179×2556-class). */
     --shell-pad: 11px;
     --shell-scale-boost: 1.03;
-    --shell-nudge-x: 7px;
+    /* Slight left shift balances backdrop; positive values skew content right (one-sided gutter). */
+    --shell-nudge-x: -6px;
   }
 
   body {

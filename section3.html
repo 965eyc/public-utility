@@ -486,11 +486,20 @@
               }
             }
 
+            /* Slide the highlight with the list so it feels tethered to the values (bead on a string). */
+            function syncHighlightToScroll() {
+              var s = step();
+              if (s <= 0) return;
+              var mod = track.scrollTop % s;
+              highlight.style.transform = "translateY(" + -mod + "px)";
+            }
+
             function scrollToIndex(idx, behavior) {
               idx = Math.max(0, Math.min(values.length - 1, idx));
               state[stateKey] = idx;
               track.scrollTo({ top: idx * step(), behavior: behavior || "auto" });
               setActiveVisual(idx);
+              window.requestAnimationFrame(syncHighlightToScroll);
             }
 
             function nearestIndex() {
@@ -517,6 +526,7 @@
             }
 
             track.addEventListener("scroll", function () {
+              syncHighlightToScroll();
               syncFromScroll();
               window.clearTimeout(scrollEndTimer);
               scrollEndTimer = window.setTimeout(onScrollSettled, 80);

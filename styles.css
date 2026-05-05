@@ -24,6 +24,10 @@
         956px
     )
   );
+  /* Applied only on narrow viewports; keeps 440×956 proportions while filling ~1179×2556-class phones. */
+  --shell-scale-boost: 1;
+  --shell-nudge-x: 0px;
+  --shell-scale-used: calc(var(--shell-scale) * var(--shell-scale-boost));
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -102,10 +106,10 @@ body {
   height: var(--shell-height);
   position: relative;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
-  transform: scale(var(--shell-scale));
+  transform: scale(var(--shell-scale-used)) translateX(var(--shell-nudge-x));
   transform-origin: top center;
   /* Collapse layout gap so the scaled shell does not leave a tall empty scroll area. */
-  margin-bottom: calc(-1 * var(--shell-height) * (1 - var(--shell-scale)));
+  margin-bottom: calc(-1 * var(--shell-height) * (1 - var(--shell-scale-used)));
 }
 
 .sr-only {
@@ -2292,6 +2296,10 @@ body.page-community {
   :root {
     --app-scale: 1;
     /* Keep shell scaling enabled so absolute-positioned art aligns on mobile. */
+    /* Tighter horizontal margin + slight boost ≈ large-phone portrait (e.g. 1179×2556-class). */
+    --shell-pad: 11px;
+    --shell-scale-boost: 1.03;
+    --shell-nudge-x: 7px;
   }
 
   body {

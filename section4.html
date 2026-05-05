@@ -18,6 +18,30 @@
       --accent-2: #ff3c00;
       --muted: #6f7696;
       --ring: rgba(67, 121, 255, 0.28);
+      /* Match styles.css shell math (440×956 ≈ portrait 1179×2556 aspect). */
+      --s4-vh: 100vh;
+      --s4-shell-pad: 16px;
+      --s4-shell-scale: min(
+        1,
+        calc(
+          (100vw - 2 * var(--s4-shell-pad) - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) /
+            440px
+        ),
+        calc(
+          (var(--s4-vh) - 2 * var(--s4-shell-pad) - env(safe-area-inset-top, 0px) -
+              env(safe-area-inset-bottom, 0px)) /
+            956px
+        )
+      );
+      --s4-shell-boost: 1;
+      --s4-nudge-x: 0px;
+      --s4-scale-used: calc(var(--s4-shell-scale) * var(--s4-shell-boost));
+    }
+
+    @supports (height: 100dvh) {
+      :root {
+        --s4-vh: 100dvh;
+      }
     }
 
     * {
@@ -497,6 +521,32 @@
       .layout {
         grid-template-columns: 380px 1fr;
         align-items: end;
+      }
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --s4-shell-pad: 11px;
+        --s4-shell-boost: 1.03;
+        --s4-nudge-x: 7px;
+      }
+
+      body {
+        min-height: var(--s4-vh);
+        padding: calc(var(--s4-shell-pad) + env(safe-area-inset-top, 0px))
+          calc(var(--s4-shell-pad) + env(safe-area-inset-right, 0px))
+          calc(var(--s4-shell-pad) + env(safe-area-inset-bottom, 0px))
+          calc(var(--s4-shell-pad) + env(safe-area-inset-left, 0px));
+        overflow-x: hidden;
+      }
+
+      .app {
+        width: 440px;
+        max-width: 440px;
+        min-width: 440px;
+        transform: scale(var(--s4-scale-used)) translateX(var(--s4-nudge-x));
+        transform-origin: top center;
+        margin-bottom: calc(-1 * 956px * (1 - var(--s4-scale-used)));
       }
     }
 

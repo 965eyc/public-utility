@@ -2300,7 +2300,7 @@ body.page-community {
     --shell-pad: 11px;
     --shell-scale-boost: 1.03;
     /* Slight left shift balances backdrop; positive values skew content right (one-sided gutter). */
-    --shell-nudge-x: -11px;
+    --shell-nudge-x: -22px;
   }
 
   body {

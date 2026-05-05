@@ -73,6 +73,7 @@
       ];
       var year = 2027;
       var month = 0;
+      var confirmedDay = PU && typeof PU.getConfirmedEventDay === "function" ? PU.getConfirmedEventDay() : null;
 
       function cellCount() {
         var first = new Date(year, month, 1).getDay();
@@ -97,8 +98,12 @@
             cell.className = "calendar-grid__cell";
             cell.setAttribute("aria-hidden", "true");
           } else {
-            var isMark = month === 0 && d === 29;
-            if (isMark) {
+            var isConfirmed = month === 0 && confirmedDay === d;
+            var isMark = month === 0 && confirmedDay == null && d === 29;
+            if (isConfirmed) {
+              cell = document.createElement("div");
+              cell.className = "calendar-grid__cell calendar-grid__cell--confirmed";
+            } else if (isMark) {
               cell = document.createElement("div");
               cell.className = "calendar-grid__cell calendar-grid__cell--mark";
             } else {

@@ -258,6 +258,10 @@ body.page-index .app__main {
   color: #ff3c00;
 }
 
+.calendar-grid__cell--confirmed::before {
+  color: #ffd400;
+}
+
 a.calendar-grid__cell {
   display: block;
   text-decoration: none;
@@ -885,6 +889,10 @@ body.page-section5 .section5-calendar-layer .s1-top-card__nav-btn--right::after 
   color: #1f285b;
 }
 
+.section5-calendar-layer .calendar-grid__cell--confirmed::before {
+  color: #ffd400;
+}
+
 body.page-section5 .section5-calendar-layer .calendar-grid__cell:not([data-day])::before {
   content: none;
 }
@@ -1351,7 +1359,7 @@ body.page-section3 .app__main {
   left: 50%;
   bottom: 8%;
   transform: translateX(-50%);
-  width: min(437px, 98%);
+  width: min(427px, 98%);
   height: auto;
   z-index: 4;
   pointer-events: none;
@@ -1362,9 +1370,9 @@ body.page-section3 .app__main {
   left: 50%;
   bottom: 8%;
   transform: translateX(-50%);
-  width: min(353px, 98%);
+  width: min(427px, 98%);
   height: auto;
-  aspect-ratio: 353 / 77;
+  aspect-ratio: 427 / 156;
   border: 0;
   background: transparent;
   z-index: 5;

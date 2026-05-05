@@ -1346,6 +1346,17 @@ body.page-section3 .app__main {
   pointer-events: none;
 }
 
+#section3-popup .section3-popup-under-timer-art {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: min(437px, 98%);
+  height: auto;
+  z-index: 4;
+  pointer-events: none;
+}
+
 /* Three square tiles: hour | minute | AM/PM — swipe up/down inside each */
 #section3-popup .section3-popup-time-tile {
   pointer-events: auto;

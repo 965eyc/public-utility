@@ -189,11 +189,11 @@ body.page-index .app__main {
 .s1-top-card__nav-btn::after {
   content: "";
   position: absolute;
-  width: 18px;
+  width: 22px;
   height: 5px;
   background: #1f285b;
   border-radius: 4px;
-  left: 12px;
+  left: 10px;
 }
 
 .s1-top-card__nav-btn--left::before {
@@ -541,9 +541,9 @@ body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn {
 
 body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn::before,
 body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn::after {
-  width: 14px;
+  width: 18px;
   height: 4px;
-  left: 9px;
+  left: 7px;
 }
 
 body.page-section2 .section2-calendar-layer .s1-top-card__nav-btn--left::before {
@@ -848,9 +848,9 @@ body.page-section5 .section5-calendar-layer .s1-top-card__nav-btn {
 
 body.page-section5 .section5-calendar-layer .s1-top-card__nav-btn::before,
 body.page-section5 .section5-calendar-layer .s1-top-card__nav-btn::after {
-  width: 10px;
+  width: 14px;
   height: 3px;
-  left: 7px;
+  left: 5px;
   background: #1f285b;
   border-radius: 3px;
 }
@@ -1596,9 +1596,9 @@ body.page-section3 .app__main {
 
 #section3-popup .section3-popup-calendar .s1-top-card__nav-btn::before,
 #section3-popup .section3-popup-calendar .s1-top-card__nav-btn::after {
-  width: 20px;
+  width: 24px;
   height: 6px;
-  left: 14px;
+  left: 12px;
 }
 
 #section3-popup .section3-popup-calendar .s1-top-card__nav-btn--left::before,

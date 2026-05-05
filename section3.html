@@ -486,61 +486,40 @@
               }
             }
 
-            var settleAnimId = null;
-            function cancelSettleAnimation() {
-              if (settleAnimId !== null) {
-                cancelAnimationFrame(settleAnimId);
-                settleAnimId = null;
+            /* Slot-style reel: rows tilt on a virtual cylinder based on scroll (fluid between stops). */
+            var reelRaf = null;
+            function updateReelTilt() {
+              var s = step();
+              if (s <= 0) return;
+              var st = track.scrollTop;
+              var children = track.children;
+              var n = children.length;
+              for (var i = 0; i < n; i++) {
+                var distRows = i - st / s;
+                var clamped = Math.max(-3.6, Math.min(3.6, distRows));
+                var tiltDeg = clamped * -21;
+                var sc = Math.max(0.58, 1 - Math.abs(clamped) * 0.11);
+                var tz = -Math.abs(clamped) * 14;
+                children[i].style.transform =
+                  "rotateX(" + tiltDeg + "deg) scale(" + sc + ") translateZ(" + tz + "px)";
               }
             }
 
-            function easeOutQuart(t) {
-              return 1 - Math.pow(1 - t, 4);
-            }
-
-            /* Fluid slot-machine style: heavy ease-out as the reel coasts into the notch */
-            function animateScrollTo(targetTop, onDone) {
-              cancelSettleAnimation();
-              var start = track.scrollTop;
-              var delta = targetTop - start;
-              if (Math.abs(delta) < 0.6) {
-                track.scrollTop = targetTop;
-                if (onDone) onDone();
-                return;
-              }
-              var dist = Math.abs(delta);
-              var duration = Math.min(900, Math.max(260, 180 + dist * 0.42));
-              var t0 = performance.now();
-              function frame(now) {
-                var u = Math.min(1, (now - t0) / duration);
-                var eased = easeOutQuart(u);
-                track.scrollTop = start + delta * eased;
-                if (u < 1) {
-                  settleAnimId = requestAnimationFrame(frame);
-                } else {
-                  settleAnimId = null;
-                  track.scrollTop = targetTop;
-                  if (onDone) onDone();
-                }
-              }
-              settleAnimId = requestAnimationFrame(frame);
+            function scheduleReelTilt() {
+              if (reelRaf !== null) return;
+              reelRaf = window.requestAnimationFrame(function () {
+                reelRaf = null;
+                updateReelTilt();
+              });
             }
 
             function scrollToIndex(idx, behavior) {
               idx = Math.max(0, Math.min(values.length - 1, idx));
               state[stateKey] = idx;
-              var target = idx * step();
-              if (behavior === "smooth") {
-                animateScrollTo(target, function () {
-                  setActiveVisual(idx);
-                  syncFromScroll();
-                });
-              } else {
-                cancelSettleAnimation();
-                track.scrollTop = target;
-                setActiveVisual(idx);
-                syncFromScroll();
-              }
+              track.scrollTo({ top: idx * step(), behavior: behavior || "auto" });
+              setActiveVisual(idx);
+              scheduleReelTilt();
+              window.requestAnimationFrame(scheduleReelTilt);
             }
 
             function nearestIndex() {
@@ -566,13 +545,11 @@
               scrollToIndex(idx, "smooth");
             }
 
-            track.addEventListener("touchstart", cancelSettleAnimation, { passive: true });
-            track.addEventListener("pointerdown", cancelSettleAnimation);
-
             track.addEventListener("scroll", function () {
+              scheduleReelTilt();
               syncFromScroll();
               window.clearTimeout(scrollEndTimer);
-              scrollEndTimer = window.setTimeout(onScrollSettled, 95);
+              scrollEndTimer = window.setTimeout(onScrollSettled, 80);
             });
 
             track.addEventListener("keydown", function (event) {
@@ -595,6 +572,14 @@
             window.requestAnimationFrame(function () {
               scrollToIndex(state[stateKey], "auto");
             });
+
+            if (typeof ResizeObserver !== "undefined") {
+              var reelResize = new ResizeObserver(function () {
+                scheduleReelTilt();
+              });
+              reelResize.observe(track);
+            }
+
             return block;
           }
 

@@ -475,7 +475,14 @@
           }
           selectedDay = null;
           render();
-          window.location.href = "home.html";
+          var goHome = function () {
+            window.location.href = "home.html";
+          };
+          if (typeof document.startViewTransition === "function") {
+            document.startViewTransition(goHome);
+          } else {
+            goHome();
+          }
         });
 
         (function setupTimeWheels() {

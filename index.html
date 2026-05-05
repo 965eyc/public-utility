@@ -21,7 +21,7 @@
           <span class="signup__label-text">Name</span>
           <input class="signup__input" type="text" name="name" id="auth-name" autocomplete="name">
         </label>
-        <label class="signup__label signup-only">
+        <label class="signup__label">
           <span class="signup__label-text">Email</span>
           <input class="signup__input" type="email" name="email" id="auth-email" autocomplete="email" required>
         </label>
@@ -29,7 +29,7 @@
           <span class="signup__label-text">Password</span>
           <input class="signup__input" type="password" name="password" id="auth-password" autocomplete="new-password" required minlength="8">
         </label>
-        <label class="signup__label">
+        <label class="signup__label signup-only">
           <span class="signup__label-text">Username</span>
           <input class="signup__input" type="text" name="username" id="auth-username" autocomplete="username" minlength="3">
         </label>
@@ -96,9 +96,11 @@
           ? "Need an account? Sign up"
           : "Already have an account? Sign in";
         nameInput.required = !isLogin;
-        emailInput.required = !isLogin;
-        usernameInput.required = true;
+        usernameInput.required = !isLogin;
         passInput.setAttribute("autocomplete", isLogin ? "current-password" : "new-password");
+        if (isLogin) {
+          usernameInput.removeAttribute("required");
+        }
         setStatus("");
       }
 
@@ -120,7 +122,6 @@
           return;
         }
         var email = emailInput.value.trim();
-        var username = usernameInput.value.trim();
         var password = passInput.value;
         if (password.length < MIN_PASSWORD) {
           setStatus("Password must be at least " + MIN_PASSWORD + " characters.");
@@ -128,6 +129,7 @@
         }
         if (!isLogin) {
           var fullName = nameInput.value.trim();
+          var username = usernameInput.value.trim();
           if (!fullName) {
             setStatus("Please enter your name.");
             return;
@@ -155,7 +157,7 @@
           }
           var user = signUpRes.data.user;
           var profileErr = await supa.from("profiles").upsert(
-            { id: user.id, full_name: fullName, username: username, email: email },
+            { id: user.id, full_name: fullName, username: username },
             { onConflict: "id" }
           );
           if (profileErr.error) {
@@ -173,28 +175,8 @@
           window.location.href = "home.html";
           return;
         }
-        if (!username || username.length < 3) {
-          setStatus("Please enter your username.");
-          return;
-        }
-
-        var profileLookup = await supa
-          .from("profiles")
-          .select("email")
-          .eq("username", username)
-          .maybeSingle();
-        if (profileLookup.error) {
-          setStatus(profileLookup.error.message);
-          return;
-        }
-        var loginEmail = profileLookup.data && profileLookup.data.email ? String(profileLookup.data.email).trim() : "";
-        if (!loginEmail) {
-          setStatus("Username not found. Please check your username or sign up.");
-          return;
-        }
-
         submitBtn.disabled = true;
-        var signInRes = await supa.auth.signInWithPassword({ email: loginEmail, password: password });
+        var signInRes = await supa.auth.signInWithPassword({ email: email, password: password });
         submitBtn.disabled = false;
         if (signInRes.error) {
           setStatus(signInRes.error.message);
@@ -209,7 +191,7 @@
             (loginUser.user_metadata && loginUser.user_metadata.full_name) ||
             email.split("@")[0];
           var loginProfileErr = await supa.from("profiles").upsert(
-            { id: loginUser.id, full_name: loginName, username: loginUsername, email: loginEmail },
+            { id: loginUser.id, full_name: loginName, username: loginUsername },
             { onConflict: "id" }
           );
           if (loginProfileErr.error) {

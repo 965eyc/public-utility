@@ -2290,24 +2290,12 @@ body.page-community {
 @media (max-width: 900px) {
   :root {
     --app-scale: 1;
-    --shell-scale: 1;
+    /* Keep shell scaling enabled so absolute-positioned art aligns on mobile. */
   }
 
   body {
     background: #B6C4FF;
-    padding: 0;
-  }
-
-  .shell,
-  .screen {
-    width: 100vw;
-    max-width: none;
-    min-height: 100dvh;
-    height: 100dvh;
-    margin: 0;
-    margin-bottom: 0;
-    transform: none;
-    box-shadow: none;
+    overflow-x: hidden;
   }
 }
 

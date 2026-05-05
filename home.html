@@ -94,19 +94,17 @@
 
       (function applyConfirmedEventToHomeCalendar() {
         var confirmedDay = typeof PU.getConfirmedEventDay === "function" ? PU.getConfirmedEventDay() : null;
+        if (confirmedDay == null) return; // First-time view: keep original hardcoded red marker.
+
         var day29 = document.querySelector('.calendar-grid__cell[data-day="29"]');
         if (day29) {
           day29.classList.remove("calendar-grid__cell--mark", "calendar-grid__cell--confirmed");
-          if (confirmedDay == null) {
-            day29.classList.add("calendar-grid__cell--mark");
-          }
         }
-        if (confirmedDay != null) {
-          var confirmedCell = document.querySelector('.calendar-grid__cell[data-day="' + String(confirmedDay) + '"]');
-          if (confirmedCell) {
-            confirmedCell.classList.remove("calendar-grid__cell--mark");
-            confirmedCell.classList.add("calendar-grid__cell--confirmed");
-          }
+
+        var confirmedCell = document.querySelector('.calendar-grid__cell[data-day="' + String(confirmedDay) + '"]');
+        if (confirmedCell) {
+          confirmedCell.classList.remove("calendar-grid__cell--mark");
+          confirmedCell.classList.add("calendar-grid__cell--confirmed");
         }
       })();
     })();

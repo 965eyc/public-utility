@@ -83,6 +83,7 @@ html {
 body {
   margin: 0;
   min-height: var(--shell-vh-for-scale);
+  background: #B6C4FF;
   padding: calc(var(--shell-pad) + env(safe-area-inset-top, 0px))
     calc(var(--shell-pad) + env(safe-area-inset-right, 0px))
     calc(var(--shell-pad) + env(safe-area-inset-bottom, 0px))

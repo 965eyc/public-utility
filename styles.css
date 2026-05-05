@@ -1309,7 +1309,7 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-calendar-layer {
   position: absolute;
   left: 50%;
-  top: 24%;
+  top: 26%;
   transform: translate(-50%, -50%);
   width: min(390px, calc(100% - 32px));
   height: min(456px, calc(100% - 28px));
@@ -1341,7 +1341,7 @@ body.page-section3 .app__main {
   padding: 16px 14px 18px;
   border-radius: 22px;
   background: #ff3c00;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
   pointer-events: none;
 }
 
@@ -1583,9 +1583,31 @@ body.page-section3 .app__main {
 #section3-popup .section3-popup-calendar .s1-top-card__nav {
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 12px;
-  padding-bottom: 2px;
-  gap: 10px;
+  margin-top: 16px;
+  padding-bottom: 6px;
+  gap: 12px;
+}
+
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn {
+  width: 48px;
+  height: 48px;
+}
+
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn::before,
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn::after {
+  width: 20px;
+  height: 6px;
+  left: 14px;
+}
+
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn--left::before,
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn--right::before {
+  top: 15px;
+}
+
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn--left::after,
+#section3-popup .section3-popup-calendar .s1-top-card__nav-btn--right::after {
+  top: 25px;
 }
 
 .section4-shell-art {
@@ -2218,6 +2240,35 @@ body.page-community {
   body.page-section3 {
     background: linear-gradient(180deg, #90a4ae 0%, var(--s3-bg-b) 45%);
   }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --app-scale: 1;
+    --shell-scale: 1;
+  }
+
+  body {
+    background: #B6C4FF;
+    padding: 0;
+  }
+
+  .shell,
+  .screen {
+    width: 100vw;
+    max-width: none;
+    min-height: 100dvh;
+    height: 100dvh;
+    margin: 0;
+    margin-bottom: 0;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Keep the app backdrop consistent on all viewports/screens. */
+body[class^="page-"] {
+  background: #B6C4FF;
 }
 
 /* Swipe-up style transition between full-page snapshots (matches Figma “push up” screen change) */

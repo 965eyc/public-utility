@@ -228,6 +228,7 @@
           </section>
         </div>
         <div class="section3-popup-time-overlay" aria-label="Select time" id="section3-popup-time-overlay"></div>
+        <button id="section3-popup-confirm-btn" class="section3-popup-confirm-btn" type="button" aria-label="Confirm selected date and time"></button>
         <svg class="section3-popup-under-timer-art" width="353" height="77" viewBox="0 0 353 77" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 <mask id="path-1-outside-1_363_1214" maskUnits="userSpaceOnUse" x="-0.582031" y="0" width="354" height="77" fill="black">
 <rect fill="white" x="-0.582031" width="354" height="77"/>
@@ -359,6 +360,8 @@
         var month = 0;
         /** No day highlighted until the user picks one (single selection). */
         var selectedDay = null;
+        /** Confirmed day remains yellow until replaced by next confirmation. */
+        var confirmedDay = null;
 
         function cellCount() {
           var first = new Date(year, month, 1).getDay();
@@ -383,7 +386,9 @@
             } else {
               cell.className = "calendar-grid__cell";
               cell.setAttribute("data-day", String(day));
-              if (selectedDay != null && day === selectedDay) {
+              if (confirmedDay != null && day === confirmedDay) {
+                cell.classList.add("calendar-grid__cell--confirmed");
+              } else if (selectedDay != null && day === selectedDay) {
                 cell.classList.add("calendar-grid__cell--mark");
               }
               day++;
@@ -403,6 +408,7 @@
           }
           var maxDay = new Date(year, month + 1, 0).getDate();
           if (selectedDay != null && selectedDay > maxDay) selectedDay = maxDay;
+          if (confirmedDay != null && confirmedDay > maxDay) confirmedDay = maxDay;
           render();
         }
 
@@ -429,6 +435,14 @@
           var hit = event.target.closest(".calendar-grid__cell[data-day]");
           if (!hit || !gridEl.contains(hit)) return;
           selectedDay = Number(hit.getAttribute("data-day"));
+          render();
+        });
+
+        var confirmBtn = document.getElementById("section3-popup-confirm-btn");
+        confirmBtn?.addEventListener("click", function () {
+          if (selectedDay == null) return;
+          confirmedDay = selectedDay;
+          selectedDay = null;
           render();
         });
 

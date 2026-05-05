@@ -1357,6 +1357,27 @@ body.page-section3 .app__main {
   pointer-events: none;
 }
 
+#section3-popup .section3-popup-confirm-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: min(353px, 98%);
+  height: auto;
+  aspect-ratio: 353 / 77;
+  border: 0;
+  background: transparent;
+  z-index: 5;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#section3-popup .section3-popup-confirm-btn:focus-visible {
+  outline: 2px solid rgba(67, 121, 255, 0.65);
+  outline-offset: 3px;
+  border-radius: 24px;
+}
+
 /* Three square tiles: hour | minute | AM/PM — swipe up/down inside each */
 #section3-popup .section3-popup-time-tile {
   pointer-events: auto;
@@ -1590,6 +1611,10 @@ body.page-section3 .app__main {
 
 #section3-popup .section3-popup-calendar .calendar-grid__cell--mark::before {
   color: #ff3c00;
+}
+
+#section3-popup .section3-popup-calendar .calendar-grid__cell--confirmed::before {
+  color: #ffd400;
 }
 
 #section3-popup .section3-popup-calendar .s1-top-card__nav {

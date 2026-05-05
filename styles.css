@@ -1327,7 +1327,7 @@ body.page-section3 .app__main {
   left: 50%;
   /* Anchored to the full yellow panel so it can sit well below the calendar card. */
   top: auto;
-  bottom: 27.5%;
+  bottom: 31%;
   transform: translateX(-50%);
   z-index: 5;
   display: flex;

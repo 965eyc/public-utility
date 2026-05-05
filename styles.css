@@ -1312,7 +1312,7 @@ body.page-section3 .app__main {
   top: 24%;
   transform: translate(-50%, -50%);
   width: min(390px, calc(100% - 32px));
-  height: min(400px, calc(100% - 44px));
+  height: min(456px, calc(100% - 28px));
   z-index: 2;
   pointer-events: auto;
 }
@@ -1516,7 +1516,7 @@ body.page-section3 .app__main {
   margin: 0;
   border: 0;
   border-radius: 22px;
-  padding: 10px 10px 12px;
+  padding: 10px 10px 20px;
   background: linear-gradient(180deg, #4379ff 0%, #89a7ff 56%, #b6c4ff 100%);
   box-shadow: none;
 }
@@ -1582,8 +1582,10 @@ body.page-section3 .app__main {
 
 #section3-popup .section3-popup-calendar .s1-top-card__nav {
   justify-content: center;
-  margin-top: 8px;
-  gap: 8px;
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding-bottom: 2px;
+  gap: 10px;
 }
 
 .section4-shell-art {

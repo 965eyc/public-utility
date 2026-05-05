@@ -35,6 +35,7 @@
       );
       --s4-shell-boost: 1;
       --s4-nudge-x: 0px;
+      --s4-bg-shift-x: 0px;
       --s4-scale-used: calc(var(--s4-shell-scale) * var(--s4-shell-boost));
     }
 
@@ -528,15 +529,16 @@
       :root {
         --s4-shell-pad: 11px;
         --s4-shell-boost: 1.03;
-        --s4-nudge-x: -22px;
+        --s4-nudge-x: 0px;
+        --s4-bg-shift-x: 32px;
       }
 
       body {
         min-height: var(--s4-vh);
         padding: calc(var(--s4-shell-pad) + env(safe-area-inset-top, 0px))
-          calc(var(--s4-shell-pad) + env(safe-area-inset-right, 0px))
+          calc(var(--s4-shell-pad) + env(safe-area-inset-right, 0px) + var(--s4-bg-shift-x))
           calc(var(--s4-shell-pad) + env(safe-area-inset-bottom, 0px))
-          calc(var(--s4-shell-pad) + env(safe-area-inset-left, 0px));
+          calc(var(--s4-shell-pad) + env(safe-area-inset-left, 0px) - var(--s4-bg-shift-x));
         overflow-x: hidden;
       }
 
@@ -544,7 +546,7 @@
         width: 440px;
         max-width: 440px;
         min-width: 440px;
-        transform: scale(var(--s4-scale-used)) translateX(var(--s4-nudge-x));
+        transform: scale(var(--s4-scale-used));
         transform-origin: top center;
         margin-bottom: calc(-1 * 956px * (1 - var(--s4-scale-used)));
       }

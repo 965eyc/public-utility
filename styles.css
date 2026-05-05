@@ -27,6 +27,8 @@
   /* Applied only on narrow viewports; keeps 440×956 proportions while filling ~1179×2556-class phones. */
   --shell-scale-boost: 1;
   --shell-nudge-x: 0px;
+  /* Shifts the centered shell horizontally via body padding (works everywhere; transform nudge alone was unreliable on mobile). */
+  --shell-bg-shift-x: 0px;
   --shell-scale-used: calc(var(--shell-scale) * var(--shell-scale-boost));
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -88,10 +90,11 @@ body {
   margin: 0;
   min-height: var(--shell-vh-for-scale);
   background: #B6C4FF;
+  /* Extra left / less right padding shifts margin:auto shell left without changing total inset width. */
   padding: calc(var(--shell-pad) + env(safe-area-inset-top, 0px))
-    calc(var(--shell-pad) + env(safe-area-inset-right, 0px))
+    calc(var(--shell-pad) + env(safe-area-inset-right, 0px) + var(--shell-bg-shift-x))
     calc(var(--shell-pad) + env(safe-area-inset-bottom, 0px))
-    calc(var(--shell-pad) + env(safe-area-inset-left, 0px));
+    calc(var(--shell-pad) + env(safe-area-inset-left, 0px) - var(--shell-bg-shift-x));
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.45;
@@ -2299,8 +2302,9 @@ body.page-community {
     /* Tighter horizontal margin + slight boost ≈ large-phone portrait (e.g. 1179×2556-class). */
     --shell-pad: 11px;
     --shell-scale-boost: 1.03;
-    /* Slight left shift balances backdrop; positive values skew content right (one-sided gutter). */
-    --shell-nudge-x: -22px;
+    /* Padding-based shift (see body): reliable left move vs one-sided blue gutter. */
+    --shell-bg-shift-x: 32px;
+    --shell-nudge-x: 0px;
   }
 
   body {
